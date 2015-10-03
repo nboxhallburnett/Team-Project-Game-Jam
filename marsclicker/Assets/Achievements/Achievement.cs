@@ -13,15 +13,27 @@ public class Achievement {
     //whether or not the achievement has already been accomplished
     public bool Accomplished { get; set; }
     //for linking a sequence of related achievements - the next achievement in the sequence
-    public Achievement NextAchievement { get; set; }
+    public Achievement NextAchievement { get; private set; }
 
-    public Achievement(string name, string bodyText, string[] triggerNames)
+    //Code to be called once this achievement has been unlocked/accomplished
+    private readonly Action OnAchievementAccomplished;
+
+    /// <summary>
+    /// Create a new Achievement
+    /// </summary>
+    /// <param name="name">THe name of the achievement. Will be displayed on the screen and used a dicitonary key for accessing achievements</param>
+    /// <param name="bodyText">The text to display on the screen beneath the achievement name once this achievement is unlocked</param>
+    /// <param name="triggerNames">The names of the triggers that must be active in order to unlock this achievement</param>
+    /// <param name="initiallyUnlockable">Whether or not the achievement is unlockable straight away. If this is not the first achievement in a sequence then this should probably be false.</param>
+    /// <param name="onAccomplish">Optional method which is called when the achievement in unlocked/accomplished. Could contain code for a reward or code to change a trigger activation value</param>
+    public Achievement(string name, string bodyText, string[] triggerNames, bool initiallyUnlockable, Action onAccomplish = null)
     {
         AchievementName = name;
         AchievementText = bodyText;
         RequiredTriggerNames = triggerNames;
+        Unlockable = initiallyUnlockable;
         Accomplished = false;
-        Unlockable = true;
+        OnAchievementAccomplished = onAccomplish;
     }
 
     /// <summary>
@@ -31,10 +43,27 @@ public class Achievement {
     {
         Accomplished = true;
 
+        if (OnAchievementAccomplished != null)
+        {
+            OnAchievementAccomplished.Invoke();
+        }
+
         //allow the next achievement in the chain to be unlockable
-        if(NextAchievement != null)
+        if (NextAchievement != null)
         {
             NextAchievement.Unlockable = true;
         }
+    }
+
+    /// <summary>
+    /// Method for setting the next achievement in a sequence of achievements. Once this achievement is unlocked, the next achievement wil become unlockable.
+    /// </summary>
+    /// <param name="next">The next achievement in the sequence</param>
+    /// <returns>Returns the achievement that was passed in for the purpose of chaining</returns>
+    public Achievement SetNextAchievement(Achievement next)
+    {
+        NextAchievement = next;
+
+        return NextAchievement;
     }
 }

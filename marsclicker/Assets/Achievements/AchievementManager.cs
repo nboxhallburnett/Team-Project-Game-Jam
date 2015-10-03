@@ -7,36 +7,74 @@ public class AchievementManager : MonoBehaviour {
 
     private static Dictionary<string, AchievementTrigger> triggers;
     private static Dictionary<string, Achievement> achievements;
-
     private static Queue<Achievement> accomplishedAchievements;
 
-    private static bool achievementTextTriggered;
+    //timer for keeping track of how much longer the achievement popup should be on screen for
+    private static float achievementDisplayTimer;
+
+    //whether or not the achievement popup is on screen
+    private static bool achievementDisplaying;
+
+    //how long the achievement popup is displayed for
+    public float AchievementDisplayDuration = 7.5f;
+
+    public Texture2D AchievementPopupBackground;
+
+    public Font AchievementTextFont;
+
+    //the popup that's displayed when an achievement is unlocked
+    private static AchievementPopup achievementPopup;
 
     // Use this for initialization
     void Start() {
         triggers = new Dictionary<string, AchievementTrigger>();
         CreateTrigger("MOUSECLICKS", 25);
-        CreateTrigger("TOTALMONEYEARNT", 50);
+        CreateTrigger("TOTALMONEYEARNED", 50);
+        CreateTrigger("TOTALTIMEPLAYED", 10);
 
+        //some example achievements, can chain creation of them together to create a sequence of related achievements
         achievements = new Dictionary<string, Achievement>();
-        CreateAchievement("It's a start!", "Some random body text", new string[] { "MOUSECLICKS" });
+        CreateAchievement("Witty Achievement Title 1", "Click the mouse 25 times", new string[] { "MOUSECLICKS" }, true, new Action(() => UpdateTriggerActivationValue("MOUSECLICKS", 100)))
+            .SetNextAchievement(CreateAchievement("Witty Achievement Title 2", "Click the mouse 100 times", new string[] { "MOUSECLICKS" }, false, new Action(() => UpdateTriggerActivationValue("MOUSECLICKS", 150))))
+            .SetNextAchievement(CreateAchievement("Witty Achievement Title 3", "Click the mouse 150 times", new string[] { "MOUSECLICKS" }, false));
+        
+        CreateAchievement("Money, Money, Money", "Earn $50", new string[] { "TOTALMONEYEARNED" }, true);
+
+        CreateAchievement("Time Achievement", "Play for 10 whole seconds", new string[] { "TOTALTIMEPLAYED" }, true);
 
         accomplishedAchievements = new Queue<Achievement>();
+
+        achievementPopup = new AchievementPopup(AchievementTextFont, AchievementPopupBackground);
     }
 	
 	// Update is called once per frame
 	void Update () {
         CheckAchievements();
+        //not all triggers will be updated in the AchievementManager, money/mouse clicks etc will be done in whichever scripts handle that stuff
+        UpdateTriggerCurrentValue("TOTALTIMEPLAYED", Time.deltaTime);
 	}
 
     void OnGUI()
     {
-        if(accomplishedAchievements.Count > 0)
+        //if there are accomplished achievements to show or we're already showing one
+        if(accomplishedAchievements.Count > 0 || achievementDisplaying)
         {
-            GUI.Label(new Rect(100, 100, 200, 150), "test");
-        }
-            
-        
+            //only dequeue another achievement if the current one has finished displaying
+            if(!achievementDisplaying && accomplishedAchievements.Count > 0)
+            {
+                Achievement ach = accomplishedAchievements.Dequeue();
+                achievementPopup.content.text = String.Format("<size=30>Achievement Unlocked!</size> \n <size=20>{0}</size> \n {1}", ach.AchievementName, ach.AchievementText);             
+                achievementDisplayTimer = Time.time;
+                achievementDisplaying = true;
+            }            
+
+            if(achievementDisplayTimer + AchievementDisplayDuration < Time.time)
+            {
+                achievementDisplaying = false;
+            }
+
+            achievementPopup.Draw();
+        }    
     }
 
     public void CheckAchievements()
@@ -61,10 +99,9 @@ public class AchievementManager : MonoBehaviour {
                 }
             }
         }
-
     }
 
-    public static void CreateAchievement(string achievementName, string bodyText, string[] triggerNamesArray)
+    public static Achievement CreateAchievement(string achievementName, string bodyText, string[] triggerNamesArray, bool initiallyUnlockable, Action onAccomplish = null)
     {
         if (String.IsNullOrEmpty(achievementName))
         {
@@ -75,11 +112,13 @@ public class AchievementManager : MonoBehaviour {
             throw new ArgumentNullException("triggerArray", "Array must be initialised and contain at least one element");
         }
 
-        Achievement achievement = new Achievement(achievementName, bodyText, triggerNamesArray);
+        Achievement achievement = new Achievement(achievementName, bodyText, triggerNamesArray, initiallyUnlockable, onAccomplish);
         achievements.Add(achievement.AchievementName, achievement);
+
+        return achievement;
     }
 
-    public static void CreateTrigger(string triggerName, int activationValue)
+    public static void CreateTrigger(string triggerName, float activationValue)
     {
         if (String.IsNullOrEmpty(triggerName))
         {
@@ -90,9 +129,9 @@ public class AchievementManager : MonoBehaviour {
         triggers.Add(trigger.TriggerName, trigger);
     }
 
-    public static void UpdateTriggerCurrentValue(string triggerName, int incrementValue)
+    public static void UpdateTriggerCurrentValue(string triggerName, float incrementValue)
     {
-        if(String.IsNullOrEmpty(triggerName))
+        if (String.IsNullOrEmpty(triggerName))
         {
             throw new ArgumentNullException("triggerName", "Argument must be a valid string corresponding the name of a trigger");
         }
@@ -107,6 +146,6 @@ public class AchievementManager : MonoBehaviour {
             throw new ArgumentNullException("triggerName", "Argument must be a valid string corresponding the name of a trigger");
         }
 
-        triggers[triggerName].CurrentValue = newActivationValue;
+        triggers[triggerName].TriggerActivationValue = newActivationValue;
     }
 }

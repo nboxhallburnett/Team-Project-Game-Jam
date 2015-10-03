@@ -4,11 +4,11 @@ using System.Collections;
 public class AchievementTrigger {
 
     public string TriggerName { get; private set; }
-    public int TriggerActivationValue { get; set; }
-    public int CurrentValue { get; set; }
+    public float TriggerActivationValue { get; set; }
+    public float CurrentValue { get; set; }
 
 
-    public AchievementTrigger(string name, int activationValue)
+    public AchievementTrigger(string name, float activationValue)
     {
         TriggerName = name;
         TriggerActivationValue = activationValue;
