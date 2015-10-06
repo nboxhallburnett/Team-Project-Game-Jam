@@ -15,9 +15,10 @@ public class clickme : MonoBehaviour {
 		if ( Input.GetMouseButtonDown(0)){
 			RaycastHit hit = new RaycastHit();
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			Transform select = GameObject.FindWithTag("mars").transform;
+			//Transform select = GameObject.FindWithTag("mars").transform;
 			if (Physics.Raycast (ray, out hit, 100.0f)){
-				money += 1.2f;
+                if(hit.collider.tag == "mars")
+                money += 1.2f;
 			}
 		}
 	}
