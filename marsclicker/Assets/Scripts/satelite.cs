@@ -3,7 +3,6 @@ using System.Collections;
 
 public class satelite : MonoBehaviour {
 
-	GameObject obj;
 	public Transform center;
 	public Vector3 axis = Vector3.up;
 	public Vector3 desiredPosition;
@@ -12,8 +11,6 @@ public class satelite : MonoBehaviour {
 	public float rotationSpeed = 80.0f;
 	
 	void Start () {
-		obj = GameObject.FindWithTag("Satelite");
-		center = obj.transform;
 		transform.position = (transform.position - center.position).normalized * radius + center.position;
 		radius = 2.0f;
 	}
