@@ -4,9 +4,9 @@ using System.Collections;
 public class clickme : MonoBehaviour {
 
 	// Step 3:
-	float profitBuffer;
+	static float profitBuffer;
 
-	// Use this for initialization
+	// Use this for initialisation
 	void Start () {
 		//initialisation
 		profitBuffer = 0.0f;
@@ -17,10 +17,10 @@ public class clickme : MonoBehaviour {
 		if (Input.GetMouseButtonDown(0)){
 			RaycastHit hit = new RaycastHit();
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			//Transform select = GameObject.FindWithTag("mars").transform;
-			if (Physics.Raycast (ray, out hit, 100.0f)){
-                if(hit.collider.tag == "mars")
-                	profitBuffer += 1.0f;
+			if (Physics.Raycast(ray, out hit, 100.0f)){
+                if (hit.collider.tag == "mars") {
+                    addMoney(1.0f);
+                }
 			}
 		}
 	}
@@ -38,10 +38,20 @@ public class clickme : MonoBehaviour {
 		}
 	}
 
+    /// <summary>
+    /// Adjusts the input value by the current value of the multiplier
+    /// </summary>
+    /// <param name="toAdd">Value to adjust by the multiplier</param>
+    /// <returns></returns>
 	float calculateAdjustedProfit (float toAdd) {
 		return toAdd * GameControl.data.multiplier;
 	}
 
+    /// <summary>
+    /// Adds a multiplier to the money being collected.
+    /// Use a value of 0 to remove the active multiplier.
+    /// </summary>
+    /// <param name="value">Magnitude of the multiplier to add</param>
 	public void addMultiplier (float value) {
 		if (value == 0.0f) {
 			GameControl.data.multiplierTimer = 0.0f;
@@ -57,4 +67,14 @@ public class clickme : MonoBehaviour {
 			GameControl.data.multiplier += value;
 		}
 	}
+
+    /// <summary>
+    /// Add money to the players balance, pre-multiplier
+    /// </summary>
+    /// <param name="amount">Base value of money to add to the players balance</param>
+    public static void addMoney (float amount) {
+        if (amount > 0) {
+            profitBuffer += amount;
+        }
+    }
 }
