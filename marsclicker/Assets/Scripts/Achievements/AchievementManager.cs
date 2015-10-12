@@ -138,9 +138,27 @@ public class AchievementManager : MonoBehaviour
 
     public void InitialiseTriggers()
     {
+        //various triggers
         CreateTrigger("MOUSECLICKS", 1);
         CreateTrigger("TOTALMONEYEARNED", 50);
         CreateTrigger("TOTALTIMEPLAYED", 10);
+        CreateTrigger("PAUSEMENUOPENED", 1);
+        CreateTrigger("CREDITSCREENOPENED", 1);
+        CreateTrigger("UPGRADEPURCHASES", 1);
+
+        //physical upgrade triggers
+        CreateTrigger("UNLOCKDRONEBOMBERS", 1);
+        CreateTrigger("UNLOCKORBITALSTATION", 1);
+
+        //non-physical upgrade triggers
+        CreateTrigger("INSPIREPURCHASES", 1);
+        CreateTrigger("SOLARENERGYBOOSTPURCHASES", 1);
+        CreateTrigger("BEAGREATGUYPURCHASES", 1);
+        CreateTrigger("THEFIVESUNSPURCHASES", 1);
+        CreateTrigger("WORMHOLETECHPURCHASES", 1);
+        CreateTrigger("DOGEPURCHASES", 1);
+
+
     }
 
     public void LoadAchievementsFromSave(List<Achievement> savedAchievements)
@@ -159,12 +177,31 @@ public class AchievementManager : MonoBehaviour
 
     public void InitialiseAchievements()
     {
+        //create general achievements
         CreateAchievement("Learn the entire game", "Click on the planet", new string[] { "MOUSECLICKS" }, true, 10)
             .SetNextAchievement(CreateAchievement("Now you've got it!", "Reach 10 clicks", new string[] { "MOUSECLICKS" }, false, 20))
                 .SetNextAchievement(CreateAchievement("You really like this, don't you?", "Reach 100 clicks", new string[] { "MOUSECLICKS" }, false, 50))
                     .SetNextAchievement(CreateAchievement("Look those clicking!", "Reach 1000 clicks", new string[] { "MOUSECLICKS" }, false, 500))
                         .SetNextAchievement(CreateAchievement("You should really get out more", "Reach 100000 clicks", new string[] { "MOUSECLICKS" }, false, 5000))
                             .SetNextAchievement(CreateAchievement("Godlike!", "Reach 1000000000 clicks", new string[] { "MOUSECLICKS" }, false, 1));
+
+
+        CreateAchievement("Time dilation", "Open the Pause Menu", new string[] { "PAUSEMENUOPENED" }, true, 10);
+        CreateAchievement("<3", "Watch the Credits", new string[] { "CREDITSCREENOPENED" }, true, 10);
+
+        CreateAchievement("Let's get clicking", "Buy an upgrade", new string[] { "UPGRADEPURCHASES" }, true, 30);
+
+        //create physical upgrade achievements
+        CreateAchievement("Not a good idea", "Unlock Automated Drone Bombers", new string[] { "UNLOCKDRONEBOMBERS" }, true, 5);
+        CreateAchievement("Even your fun is now automated", "Unlock Orbital Station", new string[] { "UNLOCKORBITALSTATION" }, true, 20);
+
+        //create non-physical upgrade achievements
+        CreateAchievement("Win the hearts of man", "Purchase Inspire", new string[] { "INSPIREPURCHASES" }, true, 10);
+        CreateAchievement("The future is bright", "Purchase Solar Energy Boost", new string[] { "SOLARENERGYBOOSTPURCHASES" }, true, 20);
+        CreateAchievement("We ran out of names for upgrades", "Purchase Be a Great Guy", new string[] { "BEAGREATGUYPURCHASES" }, true, 30);
+        CreateAchievement("Do you get it? No?", "Purchase THE FIVE SUNS", new string[] { "THEFIVESUNSPURCHASES" }, true, 50);
+        CreateAchievement("The event horizon", "Purchase Worm Hole Tech", new string[] { "WORMHOLETECHPURCHASES" }, true, 60);
+        CreateAchievement("wow much many wow", "Purchase Secret (doge)", new string[] { "DOGEPURCHASES" }, true, 1000);
 
         CreateAchievement("Money, Money, Money", "Earn $50", new string[] { "TOTALMONEYEARNED" }, true, 100);
         CreateAchievement("Time Achievement", "Play for 10 whole seconds", new string[] { "TOTALTIMEPLAYED" }, true, 100);
