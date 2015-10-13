@@ -20,7 +20,7 @@ public class clickme : MonoBehaviour {
 			if (Physics.Raycast(ray, out hit, 100.0f)){
                 if (hit.collider.tag == "mars") {
                     addMoney(1.0f);
-                    GameControl.manager.UpdateTriggerCurrentValue("MOUSECLICKS", 1);
+                    GameControl.achievementManager.UpdateTriggerCurrentValue("MOUSECLICKS", 1);
                 }
 			}
 		}
@@ -30,7 +30,7 @@ public class clickme : MonoBehaviour {
         float adjustedProfit = calculateAdjustedProfit(profitBuffer);
         GameControl.data.cash += adjustedProfit;
         GameControl.data.score += adjustedProfit;
-        GameControl.manager.UpdateTriggerCurrentValue("TOTALMONEYEARNED", adjustedProfit);
+        GameControl.achievementManager.UpdateTriggerCurrentValue("TOTALMONEYEARNED", adjustedProfit);
         profitBuffer = 0.0f;
 
 		if (GameControl.data.multiplierTimer - Time.fixedDeltaTime < 0) {
