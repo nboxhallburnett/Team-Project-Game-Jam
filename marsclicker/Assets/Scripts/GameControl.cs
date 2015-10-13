@@ -9,8 +9,10 @@ public class GameControl : MonoBehaviour {
     public static GameControl data;
 
     // variables to be used to store
-    public float cash;
-    public float score;
+	public float cash { get; set; }
+	public float score { get; set; }
+	public float multiplier { get; set; }
+	public float multiplierTimer { get; set; }
 
     // Runs before Start
     void Awake () {
@@ -29,6 +31,10 @@ public class GameControl : MonoBehaviour {
         Load();
     }
 
+	void OnDestroy () {
+		Save();
+	}
+
     // Saves data to file
     public void Save () {
         BinaryFormatter bf = new BinaryFormatter();
@@ -37,6 +43,8 @@ public class GameControl : MonoBehaviour {
 
         saveData.cash = cash;
         saveData.score = score;
+		saveData.multiplier = multiplier;
+		saveData.multiplierTimer = multiplierTimer;
 
         bf.Serialize(file, saveData);
         file.Close();
@@ -52,12 +60,16 @@ public class GameControl : MonoBehaviour {
 
             file.Close();
 
-            cash = data.cash;
-            score = data.score;
+            cash = savedData.cash;
+            score = savedData.score;
+			multiplier = savedData.multiplier;
+			multiplierTimer = savedData.multiplierTimer;
         } else { 
             // Otherwise use the default data
-            cash = 0;
-            score = 0;
+            cash = 0.0f;
+            score = 0.0f;
+			multiplier = 1.0f;
+			multiplierTimer = 0.0f;
         }
     }
 
@@ -67,5 +79,7 @@ public class GameControl : MonoBehaviour {
 [Serializable]
 class GameData {
     public float cash { get; set; }
-    public float score { get; set; }
+	public float score { get; set; }
+	public float multiplier { get; set; }
+	public float multiplierTimer { get; set; }
 }
