@@ -2,8 +2,9 @@
 using System;
 using System.Collections;
 
-public class Achievement {
-
+[Serializable]
+public class Achievement
+{
     public string AchievementName { get; private set; }
     public string AchievementText { get; private set; }
     //the name of the triggers that been to be active in order to accomplish this achievement
@@ -15,8 +16,11 @@ public class Achievement {
     //for linking a sequence of related achievements - the next achievement in the sequence
     public Achievement NextAchievement { get; private set; }
 
+    public int PointReward { get; set; }
+
     //Code to be called once this achievement has been unlocked/accomplished
-    private readonly Action OnAchievementAccomplished;
+    [NonSerialized]
+    public Action OnAchievementAccomplished;
 
     /// <summary>
     /// Create a new Achievement
@@ -26,14 +30,14 @@ public class Achievement {
     /// <param name="triggerNames">The names of the triggers that must be active in order to unlock this achievement</param>
     /// <param name="initiallyUnlockable">Whether or not the achievement is unlockable straight away. If this is not the first achievement in a sequence then this should probably be false.</param>
     /// <param name="onAccomplish">Optional method which is called when the achievement in unlocked/accomplished. Could contain code for a reward or code to change a trigger activation value</param>
-    public Achievement(string name, string bodyText, string[] triggerNames, bool initiallyUnlockable, Action onAccomplish = null)
+    public Achievement(string name, string bodyText, string[] triggerNames, bool initiallyUnlockable, int pointReward)
     {
         AchievementName = name;
         AchievementText = bodyText;
         RequiredTriggerNames = triggerNames;
         Unlockable = initiallyUnlockable;
+        PointReward = pointReward;
         Accomplished = false;
-        OnAchievementAccomplished = onAccomplish;
     }
 
     /// <summary>

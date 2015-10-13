@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
 using System;
 using System.IO;
+using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 
 public class GameControl : MonoBehaviour {
 
     // Used to reference the data and functions stored in the class anywhere in the game
     public static GameControl data;
+    public static AchievementManager manager;
 
     // variables to be used to store
-	public float cash { get; set; }
+    public float cash { get; set; }
 	public float score { get; set; }
 	public float multiplier { get; set; }
 	public float multiplierTimer { get; set; }
@@ -27,6 +29,8 @@ public class GameControl : MonoBehaviour {
 
     // Initialise data for the game
     void Start () {
+        manager = GetComponent<AchievementManager>();
+        manager.Initialise();
         // Load game data from file when starting
         Load();
     }
@@ -45,6 +49,8 @@ public class GameControl : MonoBehaviour {
         saveData.score = score;
 		saveData.multiplier = multiplier;
 		saveData.multiplierTimer = multiplierTimer;
+        saveData.achievementTriggers = manager.GetSaveAchievementTriggerList();
+        saveData.achievements = manager.GetSaveAchievementList();
 
         bf.Serialize(file, saveData);
         file.Close();
@@ -64,12 +70,18 @@ public class GameControl : MonoBehaviour {
             score = savedData.score;
 			multiplier = savedData.multiplier;
 			multiplierTimer = savedData.multiplierTimer;
+            manager.LoadAchievementTriggersFromSave(savedData.achievementTriggers);
+            manager.LoadAchievementsFromSave(savedData.achievements);
+
         } else { 
             // Otherwise use the default data
             cash = 0.0f;
             score = 0.0f;
 			multiplier = 1.0f;
 			multiplierTimer = 0.0f;
+            manager.InitialiseTriggers();
+            manager.InitialiseAchievements();
+            manager.InitialiseAchievementOnAccomplish();
         }
     }
 
@@ -79,7 +91,9 @@ public class GameControl : MonoBehaviour {
 [Serializable]
 class GameData {
     public float cash { get; set; }
-	public float score { get; set; }
-	public float multiplier { get; set; }
-	public float multiplierTimer { get; set; }
+    public float score { get; set; }
+    public float multiplier { get; set; }
+    public float multiplierTimer { get; set; }
+    public List<Achievement> achievements { get; set; }
+    public List<AchievementTrigger> achievementTriggers { get; set; }
 }
