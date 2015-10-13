@@ -8,13 +8,16 @@ public class GameControl : MonoBehaviour {
 
     // Used to reference the data and functions stored in the class anywhere in the game
     public static GameControl data;
-    public static AchievementManager manager;
+    public static AchievementManager achievementManager;
+	public static WeaponManager weaponManager;
 
-    // variables to be used to store
+    // variables to be used to store stuff
     public float cash { get; set; }
 	public float score { get; set; }
 	public float multiplier { get; set; }
 	public float multiplierTimer { get; set; }
+
+	int[] weaponCount;
 
     // Runs before Start
     void Awake () {
@@ -28,11 +31,17 @@ public class GameControl : MonoBehaviour {
     }
 
     // Initialise data for the game
-    void Start () {
-        manager = GetComponent<AchievementManager>();
-        manager.Initialise();
-        // Load game data from file when starting
-        Load();
+	void Start () {
+		// Initialise achievement data
+        achievementManager = GetComponent<AchievementManager>();
+        achievementManager.Initialise();
+		
+		// Load game data from file when starting
+		Load();
+
+		// Initialise weapon data
+		weaponManager = GetComponent<WeaponManager>();
+		weaponManager.Initialise(weaponCount);
     }
 
 	void OnDestroy () {
@@ -49,8 +58,9 @@ public class GameControl : MonoBehaviour {
         saveData.score = score;
 		saveData.multiplier = multiplier;
 		saveData.multiplierTimer = multiplierTimer;
-        saveData.achievementTriggers = manager.GetSaveAchievementTriggerList();
-        saveData.achievements = manager.GetSaveAchievementList();
+		saveData.weaponCountArray = weaponManager.GetWeaponCounts();
+        saveData.achievementTriggers = achievementManager.GetSaveAchievementTriggerList();
+        saveData.achievements = achievementManager.GetSaveAchievementList();
 
         bf.Serialize(file, saveData);
         file.Close();
@@ -70,8 +80,11 @@ public class GameControl : MonoBehaviour {
             score = savedData.score;
 			multiplier = savedData.multiplier;
 			multiplierTimer = savedData.multiplierTimer;
-            manager.LoadAchievementTriggersFromSave(savedData.achievementTriggers);
-            manager.LoadAchievementsFromSave(savedData.achievements);
+
+			weaponCount = savedData.weaponCountArray;
+
+            achievementManager.LoadAchievementTriggersFromSave(savedData.achievementTriggers);
+            achievementManager.LoadAchievementsFromSave(savedData.achievements);
 
         } else { 
             // Otherwise use the default data
@@ -79,9 +92,12 @@ public class GameControl : MonoBehaviour {
             score = 0.0f;
 			multiplier = 1.0f;
 			multiplierTimer = 0.0f;
-            manager.InitialiseTriggers();
-            manager.InitialiseAchievements();
-            manager.InitialiseAchievementOnAccomplish();
+
+			weaponCount = new int[30];
+
+            achievementManager.InitialiseTriggers();
+            achievementManager.InitialiseAchievements();
+            achievementManager.InitialiseAchievementOnAccomplish();
         }
     }
 
@@ -93,7 +109,8 @@ class GameData {
     public float cash { get; set; }
     public float score { get; set; }
     public float multiplier { get; set; }
-    public float multiplierTimer { get; set; }
+	public float multiplierTimer { get; set; }
+	public int[] weaponCountArray { get; set; }
     public List<Achievement> achievements { get; set; }
     public List<AchievementTrigger> achievementTriggers { get; set; }
 }
