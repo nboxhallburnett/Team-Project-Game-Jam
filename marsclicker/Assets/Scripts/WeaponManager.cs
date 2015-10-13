@@ -11,20 +11,32 @@ enum WeaponType {
 /// </summary>
 public class WeaponManager : MonoBehaviour {
 
-	weapon[] weapons = new weapon[30];
+	weapon[] weapons { get; private set; }
 
 	public void Initialise (int[] count) {
-		weapons = new weapon[weapons.Length];
+		weapons = new weapon[30];
 		if (count == null) {
 			count = new int[weapons.Length];
 		}
 		int index = 0;
 		#region autoClickers
-		weapons[index] = new weapon (WeaponType.AutoClicker, "Drone Bomber", 2.0f, 50.0f, count[index++]);
-		weapons[index] = new weapon (WeaponType.AutoClicker, "Orbital Station", 10.0f, 300.0f, count[index++]);
-		weapons[index] = new weapon (WeaponType.AutoClicker, "Solar Array Strike", 40.0f, 1200.0f, count[index++]);
-		weapons[index] = new weapon (WeaponType.AutoClicker, "Low Mars Orbital Cannon", 260.0f, 10000.0f, count[index++]);
-		weapons[index] = new weapon (WeaponType.AutoClicker, "Elon Star", 2048.0f, 900000.0f, count[index++]);
+		//							Weapon Type				Name						Damage		Cost		Index
+		weapons[index] = new weapon(WeaponType.AutoClicker, "Drone Bomber", 			2.0f, 		50.0f, 		count[index++]);
+		weapons[index] = new weapon(WeaponType.AutoClicker, "Orbital Cannon", 			10.0f, 		300.0f, 	count[index++]);
+		weapons[index] = new weapon(WeaponType.AutoClicker, "Solar Array Strike", 		40.0f, 		1200.0f, 	count[index++]);
+		weapons[index] = new weapon(WeaponType.AutoClicker, "Low Mars Orbital Cannon", 	260.0f, 	10000.0f, 	count[index++]);
+		weapons[index] = new weapon(WeaponType.AutoClicker, "Elon Star", 				2048.0f, 	900000.0f, 	count[index++]);
+		#endregion
+		#region playerWeapons
+		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Falcon X Parts", 			1.0f, 		0.0f, 		count[index++]);
+		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Tesla Cars", 				8.0f, 		70.0f, 		count[index++]);
+		weapons[index] = new weapon(WeaponType.PlayerWeapon, "PowerWall Battery Bomb", 	16.0f, 		200.0f, 	count[index++]);
+		weapons[index] = new weapon(WeaponType.PlayerWeapon, "SpaceX Rockets", 			32.0f, 		1000.0f, 	count[index++]);
+		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Nuclear Bombs", 			64.0f,		5000.0f, 	count[index++]);
+		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Fusion Bombs", 			128.0f, 	15000.0f, 	count[index++]);
+		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Asteroid Mining Strike", 	256.0f, 	25000.0f, 	count[index++]);
+		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Space Ripper", 			512.0f, 	40000.0f, 	count[index++]);
+		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Black Hole Detonator", 	1024.0f, 	300000.0f, 	count[index++]);
 		#endregion
 
 	}
@@ -34,7 +46,7 @@ public class WeaponManager : MonoBehaviour {
 		float cashBuffer = 0;
 		foreach (weapon wep in weapons) {
 			if (wep != null && wep.type == WeaponType.AutoClicker) {
-				cashBuffer += wep.damage * wep.count;
+				cashBuffer += (wep.damage * wep.count) * Time.fixedDeltaTime;
 			}
 		}
 		clickme.addMoney(cashBuffer);
@@ -72,7 +84,11 @@ class weapon {
 	}
 
 	public bool purchasable () {
-		return GameControl.data.cash - cost >= 0;
+		if (type == WeaponType.AutoClicker) {
+			return GameControl.data.cash - cost >= 0;
+		} else {
+			return count == 0
+		}
 	}
 
 	public bool purchase () {
