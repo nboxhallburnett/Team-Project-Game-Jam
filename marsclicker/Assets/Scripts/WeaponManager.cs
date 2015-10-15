@@ -11,7 +11,7 @@ enum WeaponType {
 /// </summary>
 public class WeaponManager : MonoBehaviour {
 
-	weapon[] weapons { get; private set; }
+	weapon[] weapons { get; set; }
 
 	public void Initialise (int[] count) {
 		weapons = new weapon[30];
@@ -87,7 +87,7 @@ class weapon {
 		if (type == WeaponType.AutoClicker) {
 			return GameControl.data.cash - cost >= 0;
 		} else {
-			return count == 0
+			return count == 0;
 		}
 	}
 
@@ -95,6 +95,7 @@ class weapon {
 		if (GameControl.data.cash - cost >= 0) {
 			GameControl.data.cash -= cost;
 			count++;
+			GameControl.data.Save();
 			return true;
 		} else {
 			return false;
