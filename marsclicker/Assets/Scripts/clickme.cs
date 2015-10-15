@@ -80,4 +80,10 @@ public class clickme : MonoBehaviour {
             profitBuffer += amount;
         }
     }
+
+	public void spawnObject(string objectRoot)
+	{
+		GameObject newObj =(GameObject)Instantiate(Resources.Load (objectRoot));
+	}
+
 }
