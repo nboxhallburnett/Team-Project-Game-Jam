@@ -28,17 +28,14 @@ public class GameControl : MonoBehaviour {
         } else if (data != this) {
             Destroy(gameObject);
         }
-    }
 
-    // Initialise data for the game
-	void Start () {
 		// Initialise achievement data
-        achievementManager = GetComponent<AchievementManager>();
-        achievementManager.Initialise();
+		achievementManager = GetComponent<AchievementManager>();
+		achievementManager.Initialise();
 		
 		// Load game data from file when starting
 		Load();
-
+		
 		// Initialise weapon data
 		weaponManager = GetComponent<WeaponManager>();
 		weaponManager.Initialise(weaponCount);

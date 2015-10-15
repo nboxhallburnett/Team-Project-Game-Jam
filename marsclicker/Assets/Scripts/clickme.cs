@@ -83,7 +83,11 @@ public class clickme : MonoBehaviour {
 
 	public void spawnObject(string objectRoot)
 	{
-		GameObject newObj =(GameObject)Instantiate(Resources.Load (objectRoot));
+		GameObject newObj = (GameObject)Instantiate(Resources.Load(objectRoot));
+		Vector3 scale = newObj.transform.localScale;
+		newObj.transform.parent = transform.parent.transform.parent.transform;
+		newObj.transform.localScale = scale;
+		newObj.transform.localPosition = new Vector3(0.0f, 1.0f, 0.0f);
 	}
 
 }
