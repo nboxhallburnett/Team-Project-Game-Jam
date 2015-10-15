@@ -81,16 +81,6 @@ public class clickme : MonoBehaviour {
         }
     }
 
-	/// <summary>
-	/// Subtract money from the players balance
-	/// </summary>
-	/// <param name="amount">Base value of money to subtract from the players balance</param>
-	public static void takeMoney (float amount) {
-		if (amount > 0) {
-			profitBuffer -= amount;
-		}
-	}
-
 	public void spawnObject(string objectRoot)
 	{
 		GameObject newObj =(GameObject)Instantiate(Resources.Load (objectRoot));
