@@ -64,7 +64,7 @@ public class WeaponManager : MonoBehaviour {
 
 	public void purchaseWeapon(string name) {
 		foreach (weapon wep in weapons) {
-			if (wep.name == name) {
+			if (wep != null && wep.name == name) {
 				wep.purchase();
 			}
 		}

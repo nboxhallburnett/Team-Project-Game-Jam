@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 public class AchievementManager : MonoBehaviour
 {
@@ -23,15 +24,20 @@ public class AchievementManager : MonoBehaviour
 
     public Font AchievementTextFont;
 
+    public bool IsGameScene;
+
     //the popup that's displayed when an achievement is unlocked
     private static AchievementPopup achievementPopup;
 
     // Update is called once per frame
     void Update()
     {
-        CheckAchievements();
-        //not all triggers will be updated in the AchievementManager, money/mouse clicks etc will be done in whichever scripts handle that stuff
-        UpdateTriggerCurrentValue("TOTALTIMEPLAYED", Time.deltaTime);
+        if (IsGameScene)
+        {
+            CheckAchievements();
+            //not all triggers will be updated in the AchievementManager, money/mouse clicks etc will be done in whichever scripts handle that stuff
+            UpdateTriggerCurrentValue("TOTALTIMEPLAYED", Time.deltaTime);
+        }
     }
 
     void OnGUI()
@@ -99,10 +105,10 @@ public class AchievementManager : MonoBehaviour
         List<Achievement> achievementList = new List<Achievement>();
         foreach (Achievement value in achievements.Values)
         {
-            if(value.Unlockable == true || value.Accomplished == true)
+            if (value.Unlockable == true || value.Accomplished == true)
             {
                 achievementList.Add(value);
-            }            
+            }
         }
 
         return achievementList;
@@ -159,6 +165,42 @@ public class AchievementManager : MonoBehaviour
         CreateTrigger("DOGEPURCHASES", 1);
 
 
+    }
+
+    public List<Achievement> GetUnlockedAchievements()
+    {
+        List<Achievement> unlockedAchievements = new List<Achievement>();
+        foreach (Achievement ach in achievements.Values)
+        {
+            if (ach.Accomplished)
+            {
+                unlockedAchievements.Add(ach);
+            }
+        }
+        return unlockedAchievements;
+    }
+
+    public List<Achievement> GetLockedAchievements()
+    {
+        List<Achievement> lockedAchievements = new List<Achievement>();
+        foreach (Achievement ach in achievements.Values)
+        {
+            if (!ach.Accomplished)
+            {
+                lockedAchievements.Add(ach);
+            }
+        }
+        return lockedAchievements;
+    }
+
+    public List<Achievement> GetAllAchievements()
+    {
+        List<Achievement> achievementList = new List<Achievement>();
+        foreach (Achievement ach in achievements.Values)
+        {
+            achievementList.Add(ach);
+        }
+        return achievementList;
     }
 
     public void LoadAchievementsFromSave(List<Achievement> savedAchievements)
