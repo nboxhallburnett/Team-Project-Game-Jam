@@ -42,7 +42,9 @@ public class GameControl : MonoBehaviour {
     }
 
 	void OnDestroy () {
-		Save();
+        //Save();
+        // TODO: Swap back to save before final build
+        DeleteSave();
 	}
 
     // Saves data to file
@@ -95,6 +97,12 @@ public class GameControl : MonoBehaviour {
             achievementManager.InitialiseTriggers();
             achievementManager.InitialiseAchievements();
             achievementManager.InitialiseAchievementOnAccomplish();
+        }
+    }
+
+    public void DeleteSave () {
+        if (File.Exists(Application.persistentDataPath + "/gameData.dat")) {
+            File.Delete(Application.persistentDataPath + "/gameData.dat");
         }
     }
 

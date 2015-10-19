@@ -13,7 +13,7 @@ public class spawnButtonInit : MonoBehaviour {
 		foreach (weapon wep in GameControl.weaponManager.weapons) {
 			if (wep != null && wep.name == weaponName) {
 				data = wep;
-				Debug.Log (wep.name);
+				Debug.Log(wep.name);
 			}
 		}
 
@@ -25,7 +25,7 @@ public class spawnButtonInit : MonoBehaviour {
 		GetComponent<Button>().interactable = data.cost <= GameControl.data.cash;
 	}
 
-	public void clickEvent () {
-		GameControl.weaponManager.purchaseWeapon (weaponName);
+	public void ClickEvent () {
+        GameControl.weaponManager.purchaseWeapon(weaponName);
 	}
 }
