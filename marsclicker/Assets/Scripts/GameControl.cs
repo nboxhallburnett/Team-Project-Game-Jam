@@ -47,6 +47,26 @@ public class GameControl : MonoBehaviour {
         DeleteSave();
 	}
 
+    void OnLevelWasLoaded(int level)
+    {
+        //0 = menu
+        //1 = game scene
+        if(level == 0)
+        {
+            AchievementManager achManager = GetComponent<AchievementManager>();
+            achManager.IsGameScene = false;
+            PickupManager pickupManager = GetComponent<PickupManager>();
+            pickupManager.IsGameScene = false;
+        }
+        if(level == 1)
+        {
+            AchievementManager achManager = GetComponent<AchievementManager>();
+            achManager.IsGameScene = true;
+            PickupManager pickupManager = GetComponent<PickupManager>();
+            pickupManager.IsGameScene = true;
+        }
+    }
+
     // Saves data to file
     public void Save () {
         BinaryFormatter bf = new BinaryFormatter();
