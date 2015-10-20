@@ -13,17 +13,15 @@ public class spawnButtonInit : MonoBehaviour {
 		foreach (weapon wep in GameControl.weaponManager.weapons) {
 			if (wep != null && wep.name == weaponName) {
 				data = wep;
-				Debug.Log(wep.name);
 			}
 		}
-
-		GetComponentInChildren<Text>().text = weaponName;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		GetComponent<Button>().interactable = data.cost <= GameControl.data.cash;
-	}
+        GetComponentInChildren<Text>().text = "$" + data.cost + " \t " + data.damage + "DPS\n" + weaponName + "\n(" + data.count + "x)";
+    }
 
 	public void ClickEvent () {
         GameControl.weaponManager.purchaseWeapon(weaponName);
