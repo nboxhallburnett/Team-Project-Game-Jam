@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-enum WeaponType {
+public enum WeaponType {
 	AutoClicker,
 	PlayerWeapon
 }
@@ -11,7 +11,7 @@ enum WeaponType {
 /// </summary>
 public class WeaponManager : MonoBehaviour {
 
-	weapon[] weapons { get; set; }
+	public weapon[] weapons { get; private set; }
 
 	public void Initialise (int[] count) {
 		weapons = new weapon[30];
@@ -38,7 +38,6 @@ public class WeaponManager : MonoBehaviour {
 		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Space Ripper", 			512.0f, 	40000.0f, 	count[index++]);
 		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Black Hole Detonator", 	1024.0f, 	300000.0f, 	count[index++]);
 		#endregion
-
 	}
 	
 	// Update is called on a fixed interval
@@ -63,12 +62,19 @@ public class WeaponManager : MonoBehaviour {
 		return wepCount;
 	}
 
+	public void purchaseWeapon(string name) {
+		foreach (weapon wep in weapons) {
+			if (wep != null && wep.name == name) {
+				wep.purchase();
+			}
+		}
+	}
 }
 
 /// <summary>
 /// Weapon.
 /// </summary>
-class weapon {
+public class weapon {
 	public WeaponType 	type	{ get; private set; }
 	public string 		name 	{ get; private set; }
 	public float 		damage 	{ get; private set; }
@@ -83,22 +89,11 @@ class weapon {
 		count 	= _count;
 	}
 
-	public bool purchasable () {
-		if (type == WeaponType.AutoClicker) {
-			return GameControl.data.cash - cost >= 0;
-		} else {
-			return count == 0;
-		}
-	}
-
-	public bool purchase () {
+	public void purchase () {
 		if (GameControl.data.cash - cost >= 0) {
 			GameControl.data.cash -= cost;
 			count++;
 			GameControl.data.Save();
-			return true;
-		} else {
-			return false;
 		}
 	}
 }

@@ -28,24 +28,23 @@ public class GameControl : MonoBehaviour {
         } else if (data != this) {
             Destroy(gameObject);
         }
-    }
 
-    // Initialise data for the game
-	void Start () {
 		// Initialise achievement data
-        achievementManager = GetComponent<AchievementManager>();
-        achievementManager.Initialise();
+		achievementManager = GetComponent<AchievementManager>();
+		achievementManager.Initialise();
 		
 		// Load game data from file when starting
 		Load();
-
+		
 		// Initialise weapon data
 		weaponManager = GetComponent<WeaponManager>();
 		weaponManager.Initialise(weaponCount);
     }
 
 	void OnDestroy () {
-		Save();
+        Save();
+        // TODO: Swap back to save before final build
+        //DeleteSave();
 	}
 
     // Saves data to file
@@ -98,6 +97,12 @@ public class GameControl : MonoBehaviour {
             achievementManager.InitialiseTriggers();
             achievementManager.InitialiseAchievements();
             achievementManager.InitialiseAchievementOnAccomplish();
+        }
+    }
+
+    public void DeleteSave () {
+        if (File.Exists(Application.persistentDataPath + "/gameData.dat")) {
+            File.Delete(Application.persistentDataPath + "/gameData.dat");
         }
     }
 
