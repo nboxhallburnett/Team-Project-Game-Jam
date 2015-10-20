@@ -79,7 +79,7 @@ public class clickme : MonoBehaviour {
     /// Use a value of 0 to remove the active multiplier.
     /// </summary>
     /// <param name="value">Magnitude of the multiplier to add</param>
-	public void addMultiplier (float value) {
+	public static void addMultiplier (float value) {
 		if (value == 0.0f) {
 			GameControl.data.multiplierTimer = 0.0f;
 		} else if (GameControl.data.multiplierTimer == 0.0f) {
