@@ -10,6 +10,30 @@ public class clickme : MonoBehaviour {
 	void Start () {
 		//initialisation
 		profitBuffer = 0.0f;
+
+        int totalWepCount = 0,
+            weaponsSpawned = 0;
+        float weaponDistance = 0.0f;
+        // Get the total weapon count so we can evenly space out the satellites on spawn
+        foreach(weapon wep in GameControl.weaponManager.weapons) {
+            if (wep != null) {
+                totalWepCount += wep.count;
+            }
+        }
+        weaponDistance = 360.0f / (float)totalWepCount;
+        foreach(weapon wep in GameControl.weaponManager.weapons) {
+            if (wep != null) {
+                for (int i = 0; i <= wep.count - 1; i++) {
+                    Debug.Log((weaponDistance * weaponsSpawned));
+                    GameObject newObj = (GameObject)Instantiate(Resources.Load("Prefabs/Weapons/" + wep.name));
+                    Vector3 scale = newObj.transform.localScale;
+                    newObj.transform.parent = transform.parent.transform.parent.transform;
+                    newObj.transform.localScale = scale;
+                    newObj.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, (weaponDistance * weaponsSpawned - 90)));
+                    newObj.transform.localPosition = pointOnCircle(weaponDistance * weaponsSpawned++, newObj.GetComponent<satellite>().radius);
+                }
+            }
+        }
 	}
 	
 	// Update is called once per frame
@@ -88,5 +112,18 @@ public class clickme : MonoBehaviour {
 		newObj.transform.localScale = scale;
 		newObj.transform.localPosition = new Vector3(0.0f, 1.0f, 0.0f);
 	}
+
+    /// <summary>
+    /// Returns the position vector for a satellite to be spawned at on load
+    /// </summary>
+    /// <param name="angle">Angle in Degrees that the satellite should be positioned at (360 / total count)</param>
+    /// <param name="radius">Radius of the circle the satellites are orbiting at</param>
+    /// <returns>Position Vector3 for the satellite</returns>
+    Vector3 pointOnCircle(float angle, float radius) {
+        float x = (float)(radius * Mathf.Cos(angle * Mathf.PI / 180F));
+        float y = (float)(radius * Mathf.Sin(angle * Mathf.PI / 180F));
+
+        return new Vector3(x, y, 0.0f);
+    }
 
 }
