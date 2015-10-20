@@ -25,26 +25,26 @@ public class GameControl : MonoBehaviour {
         if (data == null) {
             DontDestroyOnLoad(gameObject);
             data = this;
+
+			// Initialise achievement data
+			achievementManager = GetComponent<AchievementManager>();
+			achievementManager.Initialise();
+			
+			// Load game data from file when starting
+			Load();
+			
+			// Initialise weapon data
+			weaponManager = GetComponent<WeaponManager>();
+			weaponManager.Initialise(weaponCount);
         } else if (data != this) {
             Destroy(gameObject);
         }
-
-		// Initialise achievement data
-		achievementManager = GetComponent<AchievementManager>();
-		achievementManager.Initialise();
-		
-		// Load game data from file when starting
-		Load();
-		
-		// Initialise weapon data
-		weaponManager = GetComponent<WeaponManager>();
-		weaponManager.Initialise(weaponCount);
     }
 
 	void OnDestroy () {
-        Save();
+        //Save();
         // TODO: Swap back to save before final build
-        //DeleteSave();
+        DeleteSave();
 	}
 
     void OnLevelWasLoaded(int level)
