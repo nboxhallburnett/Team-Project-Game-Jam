@@ -4,26 +4,17 @@ using System.Collections;
 
 public class spawnButtonInit : MonoBehaviour {
 
-	public string weaponName;
 	int index;
-	weapon data;
+	public GameObject Spawner;
 
-	// Use this for initialization
-	void Start () {
-		foreach (weapon wep in GameControl.weaponManager.weapons) {
-			if (wep != null && wep.name == weaponName) {
-				data = wep;
-			}
-		}
-	}
-	
-	// Update is called once per frame
 	void Update () {
-		GetComponent<Button>().interactable = data.cost <= GameControl.data.cash;
-        GetComponentInChildren<Text>().text = "$" + data.cost + " \t " + data.damage + "DPS\n" + weaponName + "\n(" + data.count + "x)";
-    }
+        if (GameControl.weaponManager.selectedWeapon != null) {
+            GetComponent<Button>().interactable = GameControl.data.cash >= GameControl.weaponManager.selectedWeapon.cost;
+        }
+	}
 
-	public void ClickEvent () {
-        GameControl.weaponManager.purchaseWeapon(weaponName);
+	public void Clickything () {
+		Spawner.GetComponent<clickme>().SpawnObject("Prefabs/Weapons/" + GameControl.weaponManager.selectedWeapon.name);
+		GameControl.weaponManager.purchaseWeapon(GameControl.weaponManager.selectedWeapon.name);
 	}
 }

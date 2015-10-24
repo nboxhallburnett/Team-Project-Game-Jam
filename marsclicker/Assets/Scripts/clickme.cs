@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class clickme : MonoBehaviour {
@@ -7,9 +8,12 @@ public class clickme : MonoBehaviour {
 	static float profitBuffer;
 
 	float screenShakeTimer = 0.0f;
-	public GameObject planetImage;
-	Vector3 defaultPos,
-			defaultScale;
+    public GameObject planetImage;
+    public GameObject kawaiiPlanet;
+    public GameObject[] planets;
+    
+	Vector3 defaultPos = new Vector3(0, 0, 0),
+			defaultScale = new Vector3(1, 1, 1);
 
 	// Use this for initialisation
 	void Start () {
@@ -29,18 +33,21 @@ public class clickme : MonoBehaviour {
         foreach(weapon wep in GameControl.weaponManager.weapons) {
             if (wep != null) {
                 for (int i = 0; i <= wep.count - 1; i++) {
+					GameControl.weaponManager.increaseCost(wep.name);
                     GameObject newObj = (GameObject)Instantiate(Resources.Load("Prefabs/Weapons/" + wep.name));
                     Vector3 scale = newObj.transform.localScale;
                     newObj.transform.parent = transform.parent.transform.parent.transform;
                     newObj.transform.localScale = scale;
                     newObj.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, (weaponDistance * weaponsSpawned - 90)));
-                    newObj.transform.localPosition = pointOnCircle(weaponDistance * weaponsSpawned++, newObj.GetComponent<satellite>().radius);
+                    newObj.transform.localPosition = PointOnCircle(weaponDistance * weaponsSpawned++, newObj.GetComponent<satellite>().radius);
                 }
             }
         }
-		
-		defaultPos = planetImage.transform.localPosition;
-		defaultScale = planetImage.transform.localScale;
+
+        // Make sure the Kawaii face is the only one visible to start
+        foreach(GameObject planet in planets) {
+            planet.GetComponent<SpriteRenderer>().enabled = false;
+        }
 	}
 	
 	// Update is called once per frame
@@ -50,18 +57,23 @@ public class clickme : MonoBehaviour {
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			if (Physics.Raycast(ray, out hit, 100.0f)){
                 if (hit.collider.tag == "mars") {
-                    addMoney(1.0f);
+                    AddMoney(1.0f);
                     GameControl.achievementManager.UpdateTriggerCurrentValue("MOUSECLICKS", 1);
 					screenShakeTimer = 0.15f;
+
+                    // Add a 1 in 10 chance for the planet to change face
+                    if (Random.Range(0, 10) > 8) {
+                        SwitchPlanet();
+                    }
                 }
 			}
 		}
-		screenShakeUpdate();
+		ScreenShakeUpdate();
 
 	}
 
 	void FixedUpdate () {
-        float adjustedProfit = calculateAdjustedProfit(profitBuffer);
+        float adjustedProfit = CalculateAdjustedProfit(profitBuffer);
         GameControl.data.cash += adjustedProfit;
         GameControl.data.score += adjustedProfit;
         GameControl.achievementManager.UpdateTriggerCurrentValue("TOTALMONEYEARNED", adjustedProfit);
@@ -71,7 +83,7 @@ public class clickme : MonoBehaviour {
 			GameControl.data.multiplierTimer = 0.0f;
 			GameControl.data.multiplier = 1.0f;
 		} else {
-			GameControl.data.multiplierTimer -= Time.fixedDeltaTime;
+            GameControl.data.multiplierTimer -= Time.fixedDeltaTime;
 		}
 	}
 
@@ -80,7 +92,7 @@ public class clickme : MonoBehaviour {
     /// </summary>
     /// <param name="toAdd">Value to adjust by the multiplier</param>
     /// <returns></returns>
-	float calculateAdjustedProfit (float toAdd) {
+	float CalculateAdjustedProfit (float toAdd) {
 		return toAdd * GameControl.data.multiplier;
 	}
 
@@ -89,7 +101,7 @@ public class clickme : MonoBehaviour {
     /// Use a value of 0 to remove the active multiplier.
     /// </summary>
     /// <param name="value">Magnitude of the multiplier to add</param>
-	public static void addMultiplier (float value) {
+	public static void AddMultiplier (float value) {
 		if (value == 0.0f) {
 			GameControl.data.multiplierTimer = 0.0f;
 		} else if (GameControl.data.multiplierTimer == 0.0f) {
@@ -109,13 +121,13 @@ public class clickme : MonoBehaviour {
     /// Add money to the players balance, pre-multiplier
     /// </summary>
     /// <param name="amount">Base value of money to add to the players balance</param>
-    public static void addMoney (float amount) {
+    public static void AddMoney (float amount) {
         if (amount > 0) {
             profitBuffer += amount;
         }
     }
 
-	public void spawnObject(string objectRoot) {
+	public void SpawnObject(string objectRoot) {
 		GameObject newObj = (GameObject)Instantiate(Resources.Load(objectRoot));
 		Vector3 scale = newObj.transform.localScale;
 		newObj.transform.parent = transform.parent.transform.parent.transform;
@@ -123,7 +135,7 @@ public class clickme : MonoBehaviour {
 		newObj.transform.localPosition = new Vector3(0.0f, 1.0f, 0.0f);
 	}
 
-	void screenShakeUpdate() {
+	void ScreenShakeUpdate() {
 		if (screenShakeTimer <= 0.0f) {
 			screenShakeTimer = 0.0f;
 			planetImage.transform.localPosition = defaultPos;
@@ -142,11 +154,23 @@ public class clickme : MonoBehaviour {
     /// <param name="angle">Angle in Degrees that the satellite should be positioned at (360 / total count)</param>
     /// <param name="radius">Radius of the circle the satellites are orbiting at</param>
     /// <returns>Position Vector3 for the satellite</returns>
-    Vector3 pointOnCircle(float angle, float radius) {
+    Vector3 PointOnCircle(float angle, float radius) {
         float x = (float)(radius * Mathf.Cos(angle * Mathf.PI / 180.0f));
         float y = (float)(radius * Mathf.Sin(angle * Mathf.PI / 180.0f));
 
         return new Vector3(x, y, 0.0f);
+    }
+
+    /// <summary>
+    /// Selects a random planet face to use and sets that one as visible, hiding the rest
+    /// </summary>
+    void SwitchPlanet() {
+        foreach(GameObject planet in planets) {
+            planet.GetComponent<SpriteRenderer>().enabled = false;
+        }
+        kawaiiPlanet.GetComponent<SpriteRenderer>().enabled = false;
+        int active = Random.Range(0, planets.Length - 1);
+        planets[active].GetComponent<SpriteRenderer>().enabled = true;
     }
 
 }
