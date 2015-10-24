@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum WeaponType {
 	AutoClicker,
@@ -12,6 +14,10 @@ public enum WeaponType {
 public class WeaponManager : MonoBehaviour {
 
 	public weapon[] weapons { get; private set; }
+	public List<SelectWeaponScript> weaponButtons;
+	public weapon selectedWeapon;
+	public Sprite deselectedButton;
+	public Sprite selectedButton;
 
 	public void Initialise (int[] count) {
 		weapons = new weapon[30];
@@ -22,9 +28,8 @@ public class WeaponManager : MonoBehaviour {
 		#region autoClickers
 		//							Weapon Type				Name						Damage		Cost		Index
 		weapons[index] = new weapon(WeaponType.AutoClicker, "Drone Bomber", 			2.0f, 		50.0f, 		count[index++]);
-		weapons[index] = new weapon(WeaponType.AutoClicker, "Orbital Cannon", 			10.0f, 		300.0f, 	count[index++]);
-		weapons[index] = new weapon(WeaponType.AutoClicker, "Solar Array Strike", 		40.0f, 		1200.0f, 	count[index++]);
-		weapons[index] = new weapon(WeaponType.AutoClicker, "Low Mars Orbital Cannon", 	260.0f, 	10000.0f, 	count[index++]);
+		weapons[index] = new weapon(WeaponType.AutoClicker, "Orbital Cannon", 			16.0f, 		300.0f, 	count[index++]);
+		weapons[index] = new weapon(WeaponType.AutoClicker, "Solar Array",  	 		128.0f,		1500.0f, 	count[index++]);
 		weapons[index] = new weapon(WeaponType.AutoClicker, "Elon Star", 				2048.0f, 	900000.0f, 	count[index++]);
 		#endregion
 		#region playerWeapons
@@ -33,7 +38,6 @@ public class WeaponManager : MonoBehaviour {
 		weapons[index] = new weapon(WeaponType.PlayerWeapon, "PowerWall Battery Bomb", 	16.0f, 		200.0f, 	count[index++]);
 		weapons[index] = new weapon(WeaponType.PlayerWeapon, "SpaceX Rockets", 			32.0f, 		1000.0f, 	count[index++]);
 		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Nuclear Bombs", 			64.0f,		5000.0f, 	count[index++]);
-		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Fusion Bombs", 			128.0f, 	15000.0f, 	count[index++]);
 		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Asteroid Mining Strike", 	256.0f, 	25000.0f, 	count[index++]);
 		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Space Ripper", 			512.0f, 	40000.0f, 	count[index++]);
 		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Black Hole Detonator", 	1024.0f, 	300000.0f, 	count[index++]);
@@ -48,7 +52,34 @@ public class WeaponManager : MonoBehaviour {
 				cashBuffer += (wep.damage * wep.count) * Time.fixedDeltaTime;
 			}
 		}
-		clickme.addMoney(cashBuffer);
+		clickme.AddMoney(cashBuffer);
+	}
+
+	public void setSelectedWeapon(string name) {
+		foreach (weapon wep in weapons) {
+			if (wep != null && wep.name == name) {
+				if (selectedWeapon == wep) {
+					selectedWeapon = null;
+				} else {
+					selectedWeapon = wep;
+				}
+			}
+		}
+		foreach (SelectWeaponScript button in weaponButtons) {
+			if (button.weaponName == name && selectedWeapon != null) {
+				button.SetSelected();
+			} else {
+				button.SetDeselected();
+			}
+		}
+	}
+
+	public void increaseCost(string name) {
+		foreach(weapon wep in weapons) {
+			if (wep != null && wep.name == name) {
+				wep.updateCost(wep.cost + (wep.cost*0.1f));
+			}
+		}
 	}
 
 	public int[] GetWeaponCounts() {
@@ -65,6 +96,7 @@ public class WeaponManager : MonoBehaviour {
 	public void purchaseWeapon(string name) {
 		foreach (weapon wep in weapons) {
 			if (wep != null && wep.name == name) {
+				increaseCost(name);
 				wep.purchase();
 			}
 		}
@@ -87,6 +119,10 @@ public class weapon {
 		damage 	= _damage;
 		cost 	= _cost;
 		count 	= _count;
+	}
+
+	public void updateCost(float newCost) {
+		cost = newCost;
 	}
 
 	public void purchase () {

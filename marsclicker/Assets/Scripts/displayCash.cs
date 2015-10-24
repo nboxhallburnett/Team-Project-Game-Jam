@@ -15,6 +15,6 @@ public class displayCash : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		cashDisplay.text = "$" + Mathf.Floor(GameControl.data.cash).ToString();
+        cashDisplay.text = System.String.Format("{0:C}", Mathf.Floor(GameControl.data.cash));
 	}
 }

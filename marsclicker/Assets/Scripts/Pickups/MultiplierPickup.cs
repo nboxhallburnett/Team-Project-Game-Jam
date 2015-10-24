@@ -46,6 +46,6 @@ public class MultiplierPickup : Pickup
             multiplier = 2f;
         }
 
-        clickme.addMultiplier(multiplier);
+        clickme.AddMultiplier(multiplier);
     }
 }
