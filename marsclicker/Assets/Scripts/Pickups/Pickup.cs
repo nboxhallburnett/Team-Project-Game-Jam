@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Pickup {
+public abstract class Pickup
+{
 
     public GameObject PickupObject { get; set; }
 
@@ -16,9 +17,9 @@ public abstract class Pickup {
 
     public Pickup(float spawnX, float spawnY, Texture2D texture)
     {
-        AlphaChangeValue = 0.1f;
+        AlphaChangeValue = 0.025f;
         CurrentAlphaValue = 0.0f;
-        OpacityChangeInterval = 0.5f;
+        OpacityChangeInterval = 0.125f;
         IsActive = true;
 
         Sprite PickupSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0, 0));
@@ -39,26 +40,28 @@ public abstract class Pickup {
         //8 = pickups
         obj.layer = 8;
         PickupObject = obj;
-        
-        
+        PickupObject.transform.localScale = new Vector3(0.75f, 0.75f);
+
+
+
     }
 
     public void UpdateOpacity()
     {
         OpacityTimer += Time.deltaTime;
-        if(OpacityTimer > OpacityLastChangeTime + OpacityChangeInterval)
+        if (OpacityTimer > OpacityLastChangeTime + OpacityChangeInterval)
         {
             OpacityLastChangeTime = OpacityTimer;
 
-            if(CurrentAlphaValue >= 1.0f)
+            if (CurrentAlphaValue >= 1.0f)
             {
                 AlphaChangeValue *= -1;
-            }            
+            }
 
             CurrentAlphaValue += AlphaChangeValue;
             PickupObject.GetComponent<SpriteRenderer>().material.color = new Color(1.0f, 1.0f, 1.0f, CurrentAlphaValue);
 
-            if(CurrentAlphaValue <= 0.0f)
+            if (CurrentAlphaValue <= 0.0f)
             {
                 IsActive = false;
             }

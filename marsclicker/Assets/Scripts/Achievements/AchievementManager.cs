@@ -26,17 +26,41 @@ public class AchievementManager : MonoBehaviour
 
     public bool IsGameScene;
 
+    private bool IsLandscape;
+    private bool LastFrameOrientation;
+
     //the popup that's displayed when an achievement is unlocked
-    private static AchievementPopup achievementPopup;
+    private static GameObject achievementPopup;
+    private static AchievementPopupHandler achievementPopupHandler;
 
     // Update is called once per frame
     void Update()
     {
         if (IsGameScene)
         {
+            if (Screen.width > Screen.height)
+            {
+                IsLandscape = true;
+            }
+            else
+            {
+                IsLandscape = false;
+            }
+
+            if (LastFrameOrientation != IsLandscape)
+            {
+                //set the current popup to be active (so that it can be found again if the screen changes)
+                achievementPopup.SetActive(true);
+                //now find the new orientation popup
+                SetAchievementPopup(true);
+                achievementPopupHandler = achievementPopup.GetComponent<AchievementPopupHandler>();
+                //set the new popup to be hidden until an achievement is unlocked
+                achievementPopup.SetActive(false);
+            }
             CheckAchievements();
             //not all triggers will be updated in the AchievementManager, money/mouse clicks etc will be done in whichever scripts handle that stuff
             UpdateTriggerCurrentValue("TOTALTIMEPLAYED", Time.deltaTime);
+            LastFrameOrientation = IsLandscape;
         }
     }
 
@@ -49,17 +73,18 @@ public class AchievementManager : MonoBehaviour
             if (!achievementDisplaying && accomplishedAchievements.Count > 0)
             {
                 Achievement ach = accomplishedAchievements.Dequeue();
-                achievementPopup.content.text = String.Format("<size=20>{0}</size> \n <size=15>{1}</size> \n <size=20><b>{2} Points</b></size>", ach.AchievementName, ach.AchievementText, ach.PointReward);
+                achievementPopupHandler.SetBodyText(ach.AchievementName, ach.AchievementText);
+                achievementPopupHandler.gameObject.SetActive(true);
+                achievementPopupHandler.emitter.Play();
                 achievementDisplayTimer = Time.time;
                 achievementDisplaying = true;
             }
 
-            if (achievementDisplayTimer + AchievementDisplayDuration < Time.time)
+            if (!achievementPopup.gameObject.activeSelf || achievementDisplayTimer + AchievementDisplayDuration < Time.time)
             {
                 achievementDisplaying = false;
+                achievementPopupHandler.gameObject.SetActive(false);
             }
-
-            achievementPopup.Draw();
         }
     }
 
@@ -68,7 +93,43 @@ public class AchievementManager : MonoBehaviour
         triggers = new Dictionary<string, AchievementTrigger>();
         achievements = new Dictionary<string, Achievement>();
         accomplishedAchievements = new Queue<Achievement>();
-        achievementPopup = new AchievementPopup(AchievementTextFont, AchievementPopupBackground);
+        if (IsGameScene)
+        {
+            InitialiseAchievementPopup();
+        }
+
+    }
+
+    public void InitialiseAchievementPopup()
+    {
+        if (Screen.width > Screen.height)
+        {
+            IsLandscape = true;
+            LastFrameOrientation = IsLandscape;
+        }
+        else
+        {
+            IsLandscape = false;
+            LastFrameOrientation = IsLandscape;
+        }
+        SetAchievementPopup();
+        achievementPopupHandler = achievementPopup.GetComponent<AchievementPopupHandler>();
+        achievementPopup.SetActive(false);
+    }
+
+    public void SetAchievementPopup(bool overridePopup = false)
+    {
+        if (achievementPopup == null || overridePopup)
+        {
+            if (Screen.width > Screen.height)
+            {
+                achievementPopup = GameObject.FindGameObjectWithTag("landscapeAchPopup");
+            }
+            else
+            {
+                achievementPopup = GameObject.FindGameObjectWithTag("portraitAchPopup");
+            }
+        }
     }
 
     public void CheckAchievements()
