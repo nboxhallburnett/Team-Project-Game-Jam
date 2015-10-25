@@ -14,7 +14,7 @@ public class spawnButtonInit : MonoBehaviour {
 	}
 
 	public void Clickything () {
-		Spawner.GetComponent<clickme>().SpawnObject("Prefabs/Weapons/" + GameControl.weaponManager.selectedWeapon.name);
 		GameControl.weaponManager.purchaseWeapon(GameControl.weaponManager.selectedWeapon.name);
-	}
+        Spawner.GetComponent<clickme>().FormatWeaponLocations();
+    }
 }
