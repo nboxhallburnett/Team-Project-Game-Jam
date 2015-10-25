@@ -9,12 +9,12 @@ public class displayCash : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		cashDisplay = GetComponent<Text> ();
-		cashDisplay.text = "$" + Mathf.Floor(GameControl.data.cash).ToString();
+		cashDisplay.text = GameControl.data.cash.ToString("$0.00");
 	}
 	
 	
 	// Update is called once per frame
 	void Update () {
-        cashDisplay.text = System.String.Format("{0:C}", Mathf.Floor(GameControl.data.cash));
+		cashDisplay.text = GameControl.data.cash.ToString("$0.00");
 	}
 }

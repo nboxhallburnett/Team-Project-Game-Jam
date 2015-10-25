@@ -43,7 +43,7 @@ public class UIControl : MonoBehaviour
                         landscapeDetails[0].GetComponent<Text>().text = GameControl.weaponManager.selectedWeapon.name;
                         landscapeDetails[1].GetComponent<Text>().text = "Damage: " + GameControl.weaponManager.selectedWeapon.damage;
                         landscapeDetails[2].GetComponent<Text>().text = "Own: " + GameControl.weaponManager.selectedWeapon.count;
-                        landscapeDetails[3].GetComponent<Text>().text = System.String.Format("Cost: {0:C}", GameControl.weaponManager.selectedWeapon.cost);
+						landscapeDetails[3].GetComponent<Text>().text = GameControl.weaponManager.selectedWeapon.cost.ToString ("$0.00");
                         landscapeDetails[4].GetComponent<Image>().enabled = true;
                         landscapeDetails[4].GetComponentInChildren<Text>().enabled = true;
                     } else {
@@ -73,7 +73,7 @@ public class UIControl : MonoBehaviour
                         portraitDetails[0].GetComponent<Text>().text = GameControl.weaponManager.selectedWeapon.name;
                         portraitDetails[1].GetComponent<Text>().text = "Damage: " + GameControl.weaponManager.selectedWeapon.damage;
                         portraitDetails[2].GetComponent<Text>().text = "Own: " + GameControl.weaponManager.selectedWeapon.count;
-                        portraitDetails[3].GetComponent<Text>().text = System.String.Format("Cost: {0:C}", GameControl.weaponManager.selectedWeapon.cost);
+						portraitDetails[3].GetComponent<Text>().text = GameControl.weaponManager.selectedWeapon.cost.ToString ("$0.00");
                         portraitDetails[4].GetComponent<Image>().enabled = true;
                         portraitDetails[4].GetComponentInChildren<Text>().enabled = true;
                     } else {
