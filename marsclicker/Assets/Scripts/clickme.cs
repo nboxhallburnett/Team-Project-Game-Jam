@@ -16,42 +16,66 @@ public class clickme : MonoBehaviour {
 			defaultScale = new Vector3(1, 1, 1);
 
 	// Use this for initialisation
-	void Start () {
-		//initialisation
-		profitBuffer = 0.0f;
+	void Start ()
+    {
+        //initialisation
+        profitBuffer = 0.0f;
+        FormatWeaponLocations();
 
-        int totalWepCount = 0,
-            weaponsSpawned = 0;
+        // Make sure the Kawaii face is the only one visible to start
+        foreach (GameObject planet in planets)
+        {
+            planet.GetComponent<SpriteRenderer>().enabled = false;
+        }
+    }
+
+    public void FormatWeaponLocations()
+    {
+        bool reloading = false;
+        foreach (GameObject oldWep in GameObject.FindGameObjectsWithTag("Satellite"))
+        {
+            Destroy(oldWep);
+            reloading = true;
+        }
+       
+        int totalWepCount = 0, weaponsSpawned = 0;
         float weaponDistance = 0.0f;
         // Get the total weapon count so we can evenly space out the satellites on spawn
-        foreach(weapon wep in GameControl.weaponManager.weapons) {
-            if (wep != null) {
-                totalWepCount += wep.count;
+        foreach (weapon wep in GameControl.weaponManager.weapons)
+        {
+            if (wep != null)
+            {
+                totalWepCount += (wep.count < 10 ? wep.count : 10);
             }
         }
         weaponDistance = 360.0f / (float)totalWepCount;
-        foreach(weapon wep in GameControl.weaponManager.weapons) {
-            if (wep != null) {
-                for (int i = 0; i <= wep.count - 1; i++) {
-					GameControl.weaponManager.increaseCost(wep.name);
-                    GameObject newObj = (GameObject)Instantiate(Resources.Load("Prefabs/Weapons/" + wep.name));
-                    Vector3 scale = newObj.transform.localScale;
-                    newObj.transform.parent = transform.parent.transform.parent.transform;
-                    newObj.transform.localScale = scale;
-                    newObj.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, (weaponDistance * weaponsSpawned - 90)));
-                    newObj.transform.localPosition = PointOnCircle(weaponDistance * weaponsSpawned++, newObj.GetComponent<satellite>().radius);
+        foreach (weapon wep in GameControl.weaponManager.weapons)
+        {
+            int count = 0;
+            if (wep != null)
+            {
+                for (int i = 0; i <= wep.count - 1; i++)
+                {
+                    if (!reloading)
+                    {
+                        GameControl.weaponManager.increaseCost(wep.name);
+                    }
+                    if (++count <= 10)
+                    {
+                        GameObject newObj = (GameObject)Instantiate(Resources.Load("Prefabs/Weapons/" + wep.name));
+                        Vector3 scale = newObj.transform.localScale;
+                        newObj.transform.parent = transform.parent.transform.parent.transform;
+                        newObj.transform.localScale = scale;
+                        newObj.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, (weaponDistance * weaponsSpawned - 90)));
+                        newObj.transform.localPosition = PointOnCircle(weaponDistance * weaponsSpawned++, newObj.GetComponent<satellite>().radius);
+                    }
                 }
             }
         }
+    }
 
-        // Make sure the Kawaii face is the only one visible to start
-        foreach(GameObject planet in planets) {
-            planet.GetComponent<SpriteRenderer>().enabled = false;
-        }
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update () {
 		if (Input.GetMouseButtonDown(0)){
 			RaycastHit hit = new RaycastHit();
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
