@@ -96,6 +96,16 @@ public class UIControl : MonoBehaviour
         }
     }
 
+    public void LoadFacebook()
+    {
+        Application.OpenURL("https://www.facebook.com/pages/Elon-Musk/108250442531979?fref=ts");
+    }
+
+    public void LoadTwitter()
+    {
+        Application.OpenURL("https://twitter.com/elonmusk");
+    }
+
     public void ShowAchievements()
     {
         AchievementsShowing = true;
