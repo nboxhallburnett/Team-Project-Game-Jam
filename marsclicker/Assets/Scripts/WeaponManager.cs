@@ -96,8 +96,9 @@ public class WeaponManager : MonoBehaviour {
 	public void purchaseWeapon(string name) {
 		foreach (weapon wep in weapons) {
 			if (wep != null && wep.name == name) {
-				increaseCost(name);
-				wep.purchase();
+				if (wep.purchase()) {
+					increaseCost(name);
+				}
 			}
 		}
 	}
@@ -125,11 +126,14 @@ public class weapon {
 		cost = newCost;
 	}
 
-	public void purchase () {
+	public bool purchase () {
 		if (GameControl.data.cash - cost >= 0) {
 			GameControl.data.cash -= cost;
 			count++;
-			GameControl.data.Save();
+			GameControl.data.Save ();
+			return true;
+		} else {
+			return false;
 		}
 	}
 }
