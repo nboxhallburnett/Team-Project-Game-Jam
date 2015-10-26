@@ -53,6 +53,17 @@ public class WeaponManager : MonoBehaviour {
 			}
 		}
 		clickme.AddMoney(cashBuffer);
+
+		foreach (GameObject laser in GameObject.FindGameObjectsWithTag("laser")) {
+			float rand = Random.Range(0.0f,10.0f);
+			if (rand < 2.0f) {
+				laser.GetComponent<SpriteRenderer>().enabled = false;
+			}
+			if (rand > 8.0f)
+			{
+				laser.GetComponent<SpriteRenderer>().enabled = true;
+			}
+		}
 	}
 
 	public void setSelectedWeapon(string name) {
