@@ -4,8 +4,8 @@ using System;
 
 public class MoneyBonusPickup : Pickup {
 
-    public MoneyBonusPickup(float spawnX, float spawnY, Texture2D texture)
-        :base(spawnX, spawnY, texture)
+    public MoneyBonusPickup(float spawnX, float spawnY, Texture2D texture, AudioSource sound)
+        :base(spawnX, spawnY, texture, sound)
     {
         
     }
@@ -16,5 +16,9 @@ public class MoneyBonusPickup : Pickup {
     public override void OnCollect()
     {
         GameControl.data.cash += GameControl.data.cash * 0.1f;
+        if(PickupSound != null)
+        {
+            PickupSound.Play();
+        }        
     }
 }

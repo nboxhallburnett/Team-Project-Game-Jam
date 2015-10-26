@@ -11,6 +11,7 @@ public class clickme : MonoBehaviour {
     public GameObject planetImage;
     public GameObject kawaiiPlanet;
     public GameObject[] planets;
+    public ParticleSystem dollarEmitter;
     
 	Vector3 defaultPos = new Vector3(0, 0, 0),
 			defaultScale = new Vector3(1, 1, 1);
@@ -83,6 +84,19 @@ public class clickme : MonoBehaviour {
                 if (hit.collider.tag == "mars") {
                     AddMoney(1.0f);
                     GameControl.achievementManager.UpdateTriggerCurrentValue("MOUSECLICKS", 1);
+                    if(dollarEmitter != null)
+                    {
+                        float multiplier = GameControl.data.multiplier;
+                        if(multiplier > 0)
+                        {
+                            dollarEmitter.Emit(2 * (int)multiplier);
+                        }
+                        else
+                        {
+                            dollarEmitter.Emit(2);
+                        }
+                        
+                    }
 					screenShakeTimer = 0.15f;
 
                     // Add a 1 in 10 chance for the planet to change face
@@ -100,7 +114,6 @@ public class clickme : MonoBehaviour {
         float adjustedProfit = CalculateAdjustedProfit(profitBuffer);
         GameControl.data.cash += adjustedProfit;
         GameControl.data.score += adjustedProfit;
-        GameControl.achievementManager.UpdateTriggerCurrentValue("TOTALMONEYEARNED", adjustedProfit);
         profitBuffer = 0.0f;
 
 		if (GameControl.data.multiplierTimer - Time.fixedDeltaTime < 0) {

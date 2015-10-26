@@ -26,6 +26,8 @@ public class AchievementManager : MonoBehaviour
 
     public bool IsGameScene;
 
+    public AudioSource AchievementUnlockSound;
+
     private bool IsLandscape;
     private bool LastFrameOrientation;
 
@@ -59,7 +61,7 @@ public class AchievementManager : MonoBehaviour
             }
             CheckAchievements();
             //not all triggers will be updated in the AchievementManager, money/mouse clicks etc will be done in whichever scripts handle that stuff
-            UpdateTriggerCurrentValue("TOTALTIMEPLAYED", Time.deltaTime);
+            //UpdateTriggerCurrentValue("TOTALTIMEPLAYED", Time.deltaTime);
             LastFrameOrientation = IsLandscape;
         }
     }
@@ -75,7 +77,11 @@ public class AchievementManager : MonoBehaviour
                 Achievement ach = accomplishedAchievements.Dequeue();
                 achievementPopupHandler.SetBodyText(ach.AchievementName, ach.AchievementText);
                 achievementPopupHandler.gameObject.SetActive(true);
-                achievementPopupHandler.emitter.Play();
+                //achievementPopupHandler.emitter.Play();
+                if(AchievementUnlockSound != null)
+                {
+                    AchievementUnlockSound.Play();
+                }
                 achievementDisplayTimer = Time.time;
                 achievementDisplaying = true;
             }
@@ -281,10 +287,10 @@ public class AchievementManager : MonoBehaviour
     public void InitialiseAchievements()
     {
         //create general achievements
-        CreateAchievement("Learn the entire game", "Click on the planet", new string[] { "MOUSECLICKS" }, true, 10)
+        CreateAchievement("Master the entire game", "Click on the planet", new string[] { "MOUSECLICKS" }, true, 10)
             .SetNextAchievement(CreateAchievement("Now you've got it!", "Reach 10 clicks", new string[] { "MOUSECLICKS" }, false, 20))
                 .SetNextAchievement(CreateAchievement("You really like this, don't you?", "Reach 100 clicks", new string[] { "MOUSECLICKS" }, false, 50))
-                    .SetNextAchievement(CreateAchievement("Look those clicking!", "Reach 1000 clicks", new string[] { "MOUSECLICKS" }, false, 500))
+                    .SetNextAchievement(CreateAchievement("Like this clicking!", "Reach 1000 clicks", new string[] { "MOUSECLICKS" }, false, 500))
                         .SetNextAchievement(CreateAchievement("You should really get out more", "Reach 100000 clicks", new string[] { "MOUSECLICKS" }, false, 5000))
                             .SetNextAchievement(CreateAchievement("Godlike!", "Reach 1000000000 clicks", new string[] { "MOUSECLICKS" }, false, 1));
 
@@ -305,9 +311,6 @@ public class AchievementManager : MonoBehaviour
         CreateAchievement("Do you get it? No?", "Purchase THE FIVE SUNS", new string[] { "THEFIVESUNSPURCHASES" }, true, 50);
         CreateAchievement("The event horizon", "Purchase Worm Hole Tech", new string[] { "WORMHOLETECHPURCHASES" }, true, 60);
         CreateAchievement("wow much many wow", "Purchase Secret (doge)", new string[] { "DOGEPURCHASES" }, true, 1000);
-
-        CreateAchievement("Money, Money, Money", "Earn $50", new string[] { "TOTALMONEYEARNED" }, true, 100);
-        CreateAchievement("Time Achievement", "Play for 10 whole seconds", new string[] { "TOTALTIMEPLAYED" }, true, 100);
     }
 
     /// <summary>
@@ -316,10 +319,10 @@ public class AchievementManager : MonoBehaviour
     /// </summary>
     public void InitialiseAchievementOnAccomplish()
     {
-        UpdateAchievementOnAccomplish("Learn the entire game", new Action(() => UpdateTriggerActivationValue("MOUSECLICKS", 10)));
+        UpdateAchievementOnAccomplish("Master the entire game", new Action(() => UpdateTriggerActivationValue("MOUSECLICKS", 10)));
         UpdateAchievementOnAccomplish("Now you've got it!", new Action(() => UpdateTriggerActivationValue("MOUSECLICKS", 100)));
         UpdateAchievementOnAccomplish("You really like this, don't you?", new Action(() => UpdateTriggerActivationValue("MOUSECLICKS", 1000)));
-        UpdateAchievementOnAccomplish("Look those clicking!", new Action(() => UpdateTriggerActivationValue("MOUSECLICKS", 100000)));
+        UpdateAchievementOnAccomplish("Like this clicking!", new Action(() => UpdateTriggerActivationValue("MOUSECLICKS", 100000)));
         UpdateAchievementOnAccomplish("Godlike!", new Action(() => UpdateTriggerActivationValue("MOUSECLICKS", 1000000000)));
     }
 

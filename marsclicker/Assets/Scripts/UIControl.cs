@@ -94,6 +94,19 @@ public class UIControl : MonoBehaviour
                 }
             }
         }
+        else if(AchievementsShowing)
+        {
+            if (Screen.width > Screen.height)
+            {
+                landscapeAchievementCanvas.enabled = true;
+                portraitAchievementCanvas.enabled = false;
+            }
+            else
+            {
+                landscapeAchievementCanvas.enabled = false;
+                portraitAchievementCanvas.enabled = true;
+            }
+        }
     }
 
     public void LoadFacebook()

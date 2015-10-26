@@ -15,8 +15,11 @@ public abstract class Pickup
     public float CurrentAlphaValue { get; private set; }
     public float AlphaChangeValue { get; private set; }
 
-    public Pickup(float spawnX, float spawnY, Texture2D texture)
+    public AudioSource PickupSound { get; private set; }
+
+    public Pickup(float spawnX, float spawnY, Texture2D texture, AudioSource sound)
     {
+        PickupSound = sound;
         AlphaChangeValue = 0.025f;
         CurrentAlphaValue = 0.0f;
         OpacityChangeInterval = 0.125f;
@@ -84,7 +87,6 @@ public abstract class Pickup
                 }
             }
         }
-
         return collected;
     }
 
