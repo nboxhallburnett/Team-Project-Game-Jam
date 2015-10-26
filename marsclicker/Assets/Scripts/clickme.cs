@@ -100,7 +100,6 @@ public class clickme : MonoBehaviour {
         float adjustedProfit = CalculateAdjustedProfit(profitBuffer);
         GameControl.data.cash += adjustedProfit;
         GameControl.data.score += adjustedProfit;
-        GameControl.achievementManager.UpdateTriggerCurrentValue("TOTALMONEYEARNED", adjustedProfit);
         profitBuffer = 0.0f;
 
 		if (GameControl.data.multiplierTimer - Time.fixedDeltaTime < 0) {

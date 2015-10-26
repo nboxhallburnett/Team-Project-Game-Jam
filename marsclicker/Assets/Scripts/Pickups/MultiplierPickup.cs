@@ -11,8 +11,8 @@ public class MultiplierPickup : Pickup
     public float x32Probability = 3.85f;
     public float x100000Probability = 0.15f;
 
-    public MultiplierPickup(float spawnX, float spawnY, Texture2D texture)
-        :base(spawnX, spawnY, texture)
+    public MultiplierPickup(float spawnX, float spawnY, Texture2D texture, AudioSource sound)
+        :base(spawnX, spawnY, texture, sound)
     {
 
     }
@@ -47,5 +47,9 @@ public class MultiplierPickup : Pickup
         }
 
         clickme.AddMultiplier(multiplier);
+        if (PickupSound != null)
+        {
+            PickupSound.Play();
+        }
     }
 }

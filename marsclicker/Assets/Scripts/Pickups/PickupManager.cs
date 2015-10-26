@@ -12,6 +12,7 @@ public class PickupManager : MonoBehaviour
     public float SpawnTimeInterval = 5.0f;
     public GameObject landscapeGamePanel;
     public GameObject portraitGamePanel;
+    public AudioSource PickupSound;
 
     public float Timer { get; private set; }
     public float LastSpawnTime { get; private set; }
@@ -71,7 +72,7 @@ public class PickupManager : MonoBehaviour
             float pickupNumber = Random.Range(0f, 2f);
             if (pickupNumber <= 1f)
             {
-                MoneyBonusPickup pickup = new MoneyBonusPickup(xPos, yPos, PickupTexture);
+                MoneyBonusPickup pickup = new MoneyBonusPickup(xPos, yPos, PickupTexture, PickupSound);
                 if (Screen.width > Screen.height)
                 {
                     pickup.PickupObject.transform.parent = landscapeGamePanel.transform;
@@ -85,7 +86,7 @@ public class PickupManager : MonoBehaviour
             }
             else if (pickupNumber <= 2f)
             {
-                MultiplierPickup pickup = new MultiplierPickup(xPos, yPos, PickupTexture);
+                MultiplierPickup pickup = new MultiplierPickup(xPos, yPos, PickupTexture, PickupSound);
                 ActivePickups.Add(pickup);
 
                 if (Screen.width > Screen.height)
