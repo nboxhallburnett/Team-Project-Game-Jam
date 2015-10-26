@@ -19,6 +19,8 @@ public class WeaponManager : MonoBehaviour {
 	public Sprite deselectedButton;
 	public Sprite selectedButton;
 
+	public GameObject[] OneOffWeapons;
+
 	public void Initialise (int[] count) {
 		weapons = new weapon[30];
 		if (count == null) {
@@ -33,14 +35,12 @@ public class WeaponManager : MonoBehaviour {
 		weapons[index] = new weapon(WeaponType.AutoClicker, "Elon Star", 				2048.0f, 	900000.0f, 	count[index++]);
 		#endregion
 		#region playerWeapons
-		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Falcon X Parts", 			1.0f, 		0.0f, 		count[index++]);
-		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Tesla Cars", 				8.0f, 		70.0f, 		count[index++]);
-		weapons[index] = new weapon(WeaponType.PlayerWeapon, "PowerWall Battery Bomb", 	16.0f, 		200.0f, 	count[index++]);
-		weapons[index] = new weapon(WeaponType.PlayerWeapon, "SpaceX Rockets", 			32.0f, 		1000.0f, 	count[index++]);
-		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Nuclear Bombs", 			64.0f,		5000.0f, 	count[index++]);
-		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Asteroid Mining Strike", 	256.0f, 	25000.0f, 	count[index++]);
-		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Space Ripper", 			512.0f, 	40000.0f, 	count[index++]);
-		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Black Hole Detonator", 	1024.0f, 	300000.0f, 	count[index++]);
+		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Edison Car", 				8.0f,		50.0f, 		count[index++]);
+		weapons[index] = new weapon(WeaponType.PlayerWeapon, "SpaceY Rocket",		 	64.0f,		200.0f, 	count[index++]);
+		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Asteroid Strike",			128.0f,		1000.0f, 	count[index++]);
+		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Nuclear Bomb", 			256.0f,		5000.0f, 	count[index++]);
+		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Fusion Bomb",			 	1024.0f, 	25000.0f, 	count[index++]);
+		weapons[index] = new weapon(WeaponType.PlayerWeapon, "Space Ripper", 			2048.0f, 	100000.0f, 	count[index++]);
 		#endregion
 	}
 	
