@@ -15,6 +15,8 @@ public class spawnButtonInit : MonoBehaviour {
 
 	public void Clickything () {
 		GameControl.weaponManager.purchaseWeapon(GameControl.weaponManager.selectedWeapon.name);
-        Spawner.GetComponent<clickme>().FormatWeaponLocations();
+        if (GameControl.weaponManager.selectedWeapon.count <= 10) {
+            Spawner.GetComponent<clickme>().FormatWeaponLocations();
+        }
     }
 }

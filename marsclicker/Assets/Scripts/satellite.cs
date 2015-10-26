@@ -9,6 +9,8 @@ public class satellite : MonoBehaviour {
 	public float radius = 1.0f;
 	public float radiusSpeed = 0.5f;
 	public float rotationSpeed = 80.0f;
+
+    public float laserTimer = Random.Range(0.3f, 3.0f);
 	
 	void Start () {
 		center = GameObject.FindWithTag ("mars").transform;
