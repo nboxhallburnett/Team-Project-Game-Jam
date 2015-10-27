@@ -15,6 +15,13 @@ public class spawnButtonInit : MonoBehaviour {
                 (GameControl.weaponManager.selectedWeapon.type == WeaponType.PlayerWeapon &&
                  GameControl.weaponManager.selectedWeapon.count == 0)) {
                 enable = GameControl.data.cash >= GameControl.weaponManager.selectedWeapon.cost;
+            } else if (GameControl.weaponManager.selectedWeapon.type == WeaponType.PlayerWeapon &&
+                GameControl.weaponManager.selectedWeapon.count == 1) {
+                foreach (GameObject spawner in oneOffSpawners) {
+                    if (spawner.GetComponent<OneOffWeaponScript>().weaponName == GameControl.weaponManager.selectedWeapon.name) {
+                        enable = spawner.GetComponent<OneOffWeaponScript>().timer == 0.0f;
+                    }
+                }
             } else {
                 enable = true;
             }
@@ -32,7 +39,6 @@ public class spawnButtonInit : MonoBehaviour {
             foreach(GameObject spawner in oneOffSpawners) {
                 if (spawner.GetComponent<OneOffWeaponScript>().weaponName == GameControl.weaponManager.selectedWeapon.name) {
                     spawner.GetComponent<OneOffWeaponScript>().ClickEvent();
-                    clickme.profitBuffer += GameControl.weaponManager.selectedWeapon.damage;
                 }
             }
         }

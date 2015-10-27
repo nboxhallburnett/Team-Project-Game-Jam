@@ -4,8 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 
-public class GameControl : MonoBehaviour
-{
+public class GameControl : MonoBehaviour {
 
     // Used to reference the data and functions stored in the class anywhere in the game
     public static GameControl data;
@@ -21,11 +20,9 @@ public class GameControl : MonoBehaviour
     int[] weaponCount;
 
     // Runs before Start
-    void Awake()
-    {
+    void Awake () {
         // Makes sure that there is only ever one of this script in the game
-        if (data == null)
-        {
+        if (data == null) {
             DontDestroyOnLoad(gameObject);
             data = this;
 
@@ -39,33 +36,27 @@ public class GameControl : MonoBehaviour
             // Initialise weapon data
             weaponManager = GetComponent<WeaponManager>();
             weaponManager.Initialise(weaponCount);
-        }
-        else if (data != this)
-        {
+        } else if (data != this) {
             Destroy(gameObject);
         }
     }
 
-    void OnDestroy()
-    {
-        //Save();
+    void OnDestroy () {
+        Save();
         // TODO: Swap back to save before final build
-        DeleteSave();
+        //DeleteSave();
     }
 
-    void OnLevelWasLoaded(int level)
-    {
+    void OnLevelWasLoaded (int level) {
         //0 = menu
         //1 = game scene
-        if (level == 0)
-        {
+        if (level == 0) {
             AchievementManager achManager = GetComponent<AchievementManager>();
             achManager.IsGameScene = false;
             PickupManager pickupManager = GetComponent<PickupManager>();
             pickupManager.IsGameScene = false;
         }
-        if (level == 1)
-        {
+        if (level == 1) {
             AchievementManager achManager = GetComponent<AchievementManager>();
             achManager.IsGameScene = true;
             achManager.InitialiseAchievementPopup();
@@ -75,8 +66,7 @@ public class GameControl : MonoBehaviour
     }
 
     // Saves data to file
-    public void Save()
-    {
+    public void Save () {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(Application.persistentDataPath + "/gameData.dat");
         GameData saveData = new GameData();
@@ -94,11 +84,9 @@ public class GameControl : MonoBehaviour
     }
 
     // Loads data from file
-    public void Load()
-    {
+    public void Load () {
         // Only load the data if the file exists
-        if (File.Exists(Application.persistentDataPath + "/gameData.dat"))
-        {
+        if (File.Exists(Application.persistentDataPath + "/gameData.dat")) {
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(Application.persistentDataPath + "/gameData.dat", FileMode.Open);
             GameData savedData = (GameData)bf.Deserialize(file);
@@ -115,9 +103,7 @@ public class GameControl : MonoBehaviour
             achievementManager.LoadAchievementTriggersFromSave(savedData.achievementTriggers);
             achievementManager.LoadAchievementsFromSave(savedData.achievements);
 
-        }
-        else
-        {
+        } else {
             // Otherwise use the default data
             cash = 0.0f;
             score = 0.0f;
@@ -132,10 +118,8 @@ public class GameControl : MonoBehaviour
         }
     }
 
-    public void DeleteSave()
-    {
-        if (File.Exists(Application.persistentDataPath + "/gameData.dat"))
-        {
+    public void DeleteSave () {
+        if (File.Exists(Application.persistentDataPath + "/gameData.dat")) {
             File.Delete(Application.persistentDataPath + "/gameData.dat");
         }
     }
@@ -144,8 +128,7 @@ public class GameControl : MonoBehaviour
 
 // This serializable class is used to create an object which can be saved to and loaded from the disk
 [Serializable]
-class GameData
-{
+class GameData {
     public float cash { get; set; }
     public float score { get; set; }
     public float multiplier { get; set; }
