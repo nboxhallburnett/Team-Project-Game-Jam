@@ -5,7 +5,7 @@ using System.Collections;
 public class clickme : MonoBehaviour {
 
 	// Step 3:
-	static float profitBuffer;
+	public static float profitBuffer;
 
 	float screenShakeTimer = 0.0f;
     public GameObject planetImage;
@@ -44,7 +44,7 @@ public class clickme : MonoBehaviour {
         // Get the total weapon count so we can evenly space out the satellites on spawn
         foreach (weapon wep in GameControl.weaponManager.weapons)
         {
-            if (wep != null)
+            if (wep != null && wep.type == WeaponType.AutoClicker)
             {
                 totalWepCount += (wep.count < 10 ? wep.count : 10);
             }
@@ -53,7 +53,7 @@ public class clickme : MonoBehaviour {
         foreach (weapon wep in GameControl.weaponManager.weapons)
         {
             int count = 0;
-            if (wep != null)
+            if (wep != null && wep.type == WeaponType.AutoClicker)
             {
                 for (int i = 0; i <= wep.count - 1; i++)
                 {
@@ -97,7 +97,7 @@ public class clickme : MonoBehaviour {
                         }
                         
                     }
-					screenShakeTimer = 0.15f;
+					screenShakeTimer += 0.15f;
 
                     // Add a 1 in 10 chance for the planet to change face
                     if (Random.Range(0, 10) > 8) {
@@ -123,6 +123,10 @@ public class clickme : MonoBehaviour {
             GameControl.data.multiplierTimer -= Time.fixedDeltaTime;
 		}
 	}
+
+    void OnParticleCollision () {
+        screenShakeTimer += 0.15f;
+    }
 
     /// <summary>
     /// Adjusts the input value by the current value of the multiplier

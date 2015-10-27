@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: 57055a28abc58fb4a9929a5c98f56b55
-timeCreated: 1445479621
+guid: cd4211033d3d8624b9dcba72e0c26c2e
+timeCreated: 1445908112
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: kewl_anim_0
-    21300002: kewl_anim_1
-    21300004: kewl_anim_2
+    21300000: kewl_anim 1_0
+    21300002: kewl_anim 1_1
+    21300004: kewl_anim 1_2
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -53,7 +53,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: kewl_anim_0
+    - name: kewl_anim 1_0
       rect:
         serializedVersion: 2
         x: 0
@@ -63,7 +63,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: kewl_anim_1
+    - name: kewl_anim 1_1
       rect:
         serializedVersion: 2
         x: 1024
@@ -73,7 +73,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: kewl_anim_2
+    - name: kewl_anim 1_2
       rect:
         serializedVersion: 2
         x: 2048
