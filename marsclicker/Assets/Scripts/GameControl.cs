@@ -42,9 +42,9 @@ public class GameControl : MonoBehaviour {
     }
 
     void OnDestroy () {
-        Save();
+        //Save();
         // TODO: Swap back to save before final build
-        //DeleteSave();
+        DeleteSave();
     }
 
     void OnLevelWasLoaded (int level) {
