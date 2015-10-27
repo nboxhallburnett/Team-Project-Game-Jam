@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: efc5d9befc997184892d2f6a78d434e3
-timeCreated: 1445479951
+guid: 67525ab9c7189064bb29f9dc0d4001ae
+timeCreated: 1445907838
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: cry1_anim_0
-    21300002: cry1_anim_1
-    21300004: cry1_anim_2
+    21300000: cry1_anim 1_0
+    21300002: cry1_anim 1_1
+    21300004: cry1_anim 1_2
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -32,7 +32,7 @@ TextureImporter:
   textureFormat: -1
   maxTextureSize: 4096
   textureSettings:
-    filterMode: 1
+    filterMode: -1
     aniso: 16
     mipBias: -1
     wrapMode: 1
@@ -53,7 +53,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: cry1_anim_0
+    - name: cry1_anim 1_0
       rect:
         serializedVersion: 2
         x: 0
@@ -63,7 +63,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: cry1_anim_1
+    - name: cry1_anim 1_1
       rect:
         serializedVersion: 2
         x: 1024
@@ -73,7 +73,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: cry1_anim_2
+    - name: cry1_anim 1_2
       rect:
         serializedVersion: 2
         x: 2048

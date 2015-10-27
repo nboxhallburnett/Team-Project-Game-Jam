@@ -34,6 +34,7 @@ public class UIControl : MonoBehaviour
             Camera camera = GetComponent<Camera>();
             if (Screen.width >= Screen.height)
             {
+                GameObject.FindGameObjectWithTag("backgroundImage").GetComponent<GUITexture>().pixelInset = new Rect(0, -Screen.height / 2.0f, 0, Screen.height);
 
                 landscapeCanvas.enabled = true;
                 portraitCanvas.enabled = false;
@@ -42,8 +43,16 @@ public class UIControl : MonoBehaviour
                     if (GameControl.weaponManager.selectedWeapon != null) {
                         landscapeDetails[0].GetComponent<Text>().text = GameControl.weaponManager.selectedWeapon.name;
                         landscapeDetails[1].GetComponent<Text>().text = "Damage: " + GameControl.weaponManager.selectedWeapon.damage;
-                        landscapeDetails[2].GetComponent<Text>().text = "Own: " + GameControl.weaponManager.selectedWeapon.count;
-						landscapeDetails[3].GetComponent<Text>().text = GameControl.weaponManager.selectedWeapon.cost.ToString ("$0.00");
+                        landscapeDetails[2].GetComponent<Text>().text = GameControl.weaponManager.selectedWeapon.type == WeaponType.AutoClicker ? "Own: " + GameControl.weaponManager.selectedWeapon.count : "";
+                        if (GameControl.weaponManager.selectedWeapon.type == WeaponType.AutoClicker ||
+                            (GameControl.weaponManager.selectedWeapon.type == WeaponType.PlayerWeapon &&
+                             GameControl.weaponManager.selectedWeapon.count == 0)) {
+                            landscapeDetails[3].GetComponent<Text>().text = GameControl.weaponManager.selectedWeapon.cost.ToString("$0.00");
+                            landscapeDetails[4].GetComponentInChildren<Text>().text = "Purchase";
+                        } else {
+                            landscapeDetails[3].GetComponent<Text>().text = "";
+                            landscapeDetails[4].GetComponentInChildren<Text>().text = "Send";
+                        }
                         landscapeDetails[4].GetComponent<Image>().enabled = true;
                         landscapeDetails[4].GetComponentInChildren<Text>().enabled = true;
                     } else {
@@ -65,6 +74,8 @@ public class UIControl : MonoBehaviour
             }
             else
             {
+                GameObject.FindGameObjectWithTag("backgroundImage").GetComponent<GUITexture>().pixelInset = new Rect(-Screen.width / 2.0f, 0, Screen.width, 0);
+
                 landscapeCanvas.enabled = false;
 				portraitCanvas.enabled = true;
 
@@ -72,8 +83,16 @@ public class UIControl : MonoBehaviour
                     if (GameControl.weaponManager.selectedWeapon != null) {
                         portraitDetails[0].GetComponent<Text>().text = GameControl.weaponManager.selectedWeapon.name;
                         portraitDetails[1].GetComponent<Text>().text = "Damage: " + GameControl.weaponManager.selectedWeapon.damage;
-                        portraitDetails[2].GetComponent<Text>().text = "Own: " + GameControl.weaponManager.selectedWeapon.count;
-						portraitDetails[3].GetComponent<Text>().text = GameControl.weaponManager.selectedWeapon.cost.ToString ("$0.00");
+                        portraitDetails[2].GetComponent<Text>().text = GameControl.weaponManager.selectedWeapon.type == WeaponType.AutoClicker ? "Own: " + GameControl.weaponManager.selectedWeapon.count : "";
+                        if (GameControl.weaponManager.selectedWeapon.type == WeaponType.AutoClicker || 
+                            (GameControl.weaponManager.selectedWeapon.type == WeaponType.PlayerWeapon && 
+                             GameControl.weaponManager.selectedWeapon.count == 0)) {
+                            portraitDetails[3].GetComponent<Text>().text = GameControl.weaponManager.selectedWeapon.cost.ToString("$0.00");
+                            portraitDetails[4].GetComponentInChildren<Text>().text = "Purchase";
+                        } else {
+                            portraitDetails[3].GetComponent<Text>().text = "";
+                            portraitDetails[4].GetComponentInChildren<Text>().text = "Send";
+                        }
                         portraitDetails[4].GetComponent<Image>().enabled = true;
                         portraitDetails[4].GetComponentInChildren<Text>().enabled = true;
                     } else {
