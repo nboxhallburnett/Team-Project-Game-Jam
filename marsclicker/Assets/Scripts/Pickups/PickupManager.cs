@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using UnityEngine.UI;
 
 public class PickupManager : MonoBehaviour
 {
@@ -13,9 +13,17 @@ public class PickupManager : MonoBehaviour
     public GameObject landscapeGamePanel;
     public GameObject portraitGamePanel;
     public AudioSource PickupSound;
+    public ParticleSystem CashParticles;
+    public Text LandscapeMoneyBonusText;
+    public Text PortraitMoneyBonusText;
+    private Text CurrentMoneyBonusText;
 
     public float Timer { get; private set; }
     public float LastSpawnTime { get; private set; }
+    private float MoneyBonusTextTimer;
+    private bool TextTimerStarted;
+
+    private ParticleSystem cashEmitter;
 
     // Use this for initialization
     void Start()
@@ -28,6 +36,14 @@ public class PickupManager : MonoBehaviour
     {
         if (IsGameScene)
         {
+            if (Screen.width > Screen.height)
+            {
+                CurrentMoneyBonusText = LandscapeMoneyBonusText;
+            }
+            else
+            {
+                CurrentMoneyBonusText = PortraitMoneyBonusText;
+            }
             Timer += Time.deltaTime;
             HandlePickupSpawns();
             foreach (Pickup pickup in ActivePickups.ToArray())
@@ -37,6 +53,21 @@ public class PickupManager : MonoBehaviour
                 {
                     if (pickup.IsCollected())
                     {
+                        if (pickup.GetType() == typeof(MoneyBonusPickup))
+                        {
+                            if (CashParticles != null)
+                            {
+                                if (cashEmitter == null)
+                                {
+                                    cashEmitter = Instantiate(CashParticles);
+                                }
+                                if (cashEmitter != null)
+                                {
+                                    cashEmitter.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                                    cashEmitter.Emit(cashEmitter.maxParticles);
+                                }
+                            }
+                        }
                         pickup.OnCollect();
                         ActivePickups.Remove(pickup);
                         Destroy(pickup.PickupObject);
@@ -49,6 +80,23 @@ public class PickupManager : MonoBehaviour
                 }
 
             }
+            if(CurrentMoneyBonusText != null && CurrentMoneyBonusText.text != "")
+            {
+                if (!TextTimerStarted)
+                {
+                    MoneyBonusTextTimer = Timer;
+                    TextTimerStarted = true;
+                }
+                else if (Timer > MoneyBonusTextTimer + 4.0f)
+                {
+                    //reset them both in case the screen orientation has changed
+                    LandscapeMoneyBonusText.text = "";
+                    PortraitMoneyBonusText.text = "";
+                    TextTimerStarted = false;
+                }
+                
+            }
+
         }
     }
 
@@ -72,7 +120,7 @@ public class PickupManager : MonoBehaviour
             float pickupNumber = Random.Range(0f, 2f);
             if (pickupNumber <= 1f)
             {
-                MoneyBonusPickup pickup = new MoneyBonusPickup(xPos, yPos, PickupTexture, PickupSound);
+                MoneyBonusPickup pickup = new MoneyBonusPickup(xPos, yPos, PickupTexture, PickupSound, CurrentMoneyBonusText);
                 if (Screen.width > Screen.height)
                 {
                     pickup.PickupObject.transform.parent = landscapeGamePanel.transform;
