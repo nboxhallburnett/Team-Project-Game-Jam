@@ -36,6 +36,13 @@ public class PickupManager : MonoBehaviour
     {
         if (IsGameScene)
         {
+            if(LandscapeMoneyBonusText == null)
+            {
+                GameObject obj = GameObject.FindGameObjectWithTag("landscapeBonusText");
+                LandscapeMoneyBonusText = obj.GetComponent<Text>();
+                obj = GameObject.FindGameObjectWithTag("portraitBonusText");
+                PortraitMoneyBonusText = obj.GetComponent<Text>();
+            }
             if (Screen.width > Screen.height)
             {
                 CurrentMoneyBonusText = LandscapeMoneyBonusText;

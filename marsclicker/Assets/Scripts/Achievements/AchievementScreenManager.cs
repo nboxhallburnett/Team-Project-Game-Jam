@@ -8,6 +8,9 @@ public class AchievementScreenManager : MonoBehaviour {
 
 	public GameObject UnlockedAchievementPrefab;
 	public GameObject LockedAchievementPrefab;
+    public Text TotalPointsTextLandscape;
+    public Text TotalPointsPortrait;
+    private float TotalPoints;
 
 	// Use this for initialization
 	void Start () {
@@ -22,6 +25,17 @@ public class AchievementScreenManager : MonoBehaviour {
 
         //get all the achievements in the game
 		List<Achievement> achievements = GameControl.achievementManager.GetAllAchievements();
+
+        foreach (Achievement achievement in achievements)
+        {
+            if(achievement.Accomplished)
+            {
+                TotalPoints += achievement.PointReward;
+            }
+        }
+        TotalPointsTextLandscape.text = "Total Achievement Points: " + TotalPoints.ToString();
+        TotalPointsPortrait.text = "Total Achievement Points: " + TotalPoints.ToString();
+
 
         //order those achievements so that the unlocked ones appear at the top
         achievements = achievements.OrderByDescending(ach => ach, new AchievementComparer()).ToList();
